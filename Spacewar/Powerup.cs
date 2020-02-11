@@ -13,7 +13,7 @@ namespace Spacewar
         float playerSpeed = +0.5f;
         float fireRate = +0.2f;
         int health = +2;
-        float powerTimer = +20.4f;
+        int powerTimer = 10000; //10sec
 
         public PowerUps(Texture2D texture, Vector2 position): base(texture, position)
         {
