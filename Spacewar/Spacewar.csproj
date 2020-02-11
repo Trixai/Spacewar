@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
+	<Compile Include="Interface.cs" />
+    <Compile Include="Powerup.cs" />
     <Compile Include="Interface.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
