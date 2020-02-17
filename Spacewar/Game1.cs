@@ -8,6 +8,7 @@ namespace Spacewar
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Interface interFace;
 
         public Game1()
         {
@@ -23,6 +24,8 @@ namespace Spacewar
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            interFace = new Interface(Content.Load<SpriteFont>("Test"));
         }
 
         protected override void UnloadContent()
@@ -41,6 +44,11 @@ namespace Spacewar
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+            interFace.Draw("Health", spriteBatch, 10, 10);
+            interFace.Draw("Health", spriteBatch, 720, 10);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
