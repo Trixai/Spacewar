@@ -17,7 +17,6 @@ namespace Spacewar
 
         Powerup powerup;
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
