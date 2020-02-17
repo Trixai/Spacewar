@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
-    class Interface
+    class Weapons
     {
         public SpriteFont font;
 
