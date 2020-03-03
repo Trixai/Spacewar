@@ -14,7 +14,10 @@ namespace Spacewar
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public Point Size { get; set; }
-        public Rectangle Hitbox { get { return new Rectangle(Position.ToPoint(), Size); } }
+
+        int HEIGHT = 900; 
+        //public Rectangle Hitbox { get { return new Rectangle(Position.ToPoint(), Size); } }
+        public Rectangle Hitbox { get { return new Rectangle(new Point((int)Position.X,HEIGHT-(int)Position.Y), Size); } }
 
         public GameObject(Texture2D texture,Vector2 pos, Vector2 velocity, Point size)
         {

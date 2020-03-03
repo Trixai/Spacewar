@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,19 +18,124 @@ namespace Spacewar
 
         float rotation = 0; //Radians
         Vector2 vectorScale;
-        int health;
+        public int health { get; private set; }
         int deathCount;
         float fireRate;
         //Weapon weapon;
         float powerTimer;
         bool powerActivated = false;
 
-
         float maxSpeed = 15f;
         public void Thrust(float speed)
         {
-            Velocity += new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))*speed;
+            Velocity += new Vector2((float)Math.Cos(-rotation), (float)Math.Sin(-rotation))*speed;
             Velocity = new Vector2(MathHelper.Clamp(Velocity.X, -maxSpeed, maxSpeed), MathHelper.Clamp(Velocity.Y, -maxSpeed, maxSpeed));
+        }
+
+        public Vector2 CalculateX()
+        {
+            var normal = Vector2.Normalize(Velocity);
+            var angle = Math.Atan(normal.Y/normal.X);
+            int height = 900;
+            int width = 1600;
+            float x, y, k = 0;
+            float tempx = 0;
+
+            k = Position.Y - (float)Math.Tan(angle) * Position.X;
+
+            if (Position.Y > height)
+            {
+                tempx = (-k) / (float)Math.Tan(angle);
+
+                if(tempx<0)
+                {
+                    y = k;
+                    x = 0;
+                }
+                else if(tempx>width)
+                {
+                    y = (float) Math.Tan(angle) * width + k;
+                    x = width;
+                }
+                else
+                {
+                    y = 0;
+                    x = tempx;
+                }
+
+            }
+            else
+            {
+                tempx = (height - k) / (float)Math.Tan(angle);
+                if (tempx < 0)
+                {
+                    y = k;
+                    x = 0;
+                }
+                else if (tempx > width)
+                {
+                    y = (float)Math.Tan(angle) * width + k;
+                    x = width;
+                }
+                else
+                {
+                    y = height;
+                    x = tempx;
+                }
+            }
+            return new Vector2(x, y);
+        }
+        public Vector2 CalculateY()
+        {
+            var normal = Vector2.Normalize(Velocity);
+            var angle = Math.Atan(normal.Y / normal.X);
+            int height = 900;
+            int width = 1600;
+            float x, y, k = 0;
+            float tempy = 0;
+
+            k = Position.Y - (float)Math.Tan(angle) * Position.X;
+
+            if(Position.X>width)
+            {
+                tempy = k;
+                if (tempy<0)
+                {
+                    x = (-k)/(float)Math.Tan(angle);
+                    y = 0;
+                }
+                else if(tempy>height)
+                {
+                    x = (height - k) / (float)Math.Tan(angle);
+                    y = height;
+                }
+                else
+                {
+                    x = 0;
+                    y = k;
+                }
+            }
+            else
+            {
+                tempy = width*(float)Math.Tan(angle)+ k;
+                if (tempy < 0)
+                {
+                    x = (-k) / (float)Math.Tan(angle);
+                    y = 0;
+                }
+                else if (tempy > height)
+                {   
+                    x = (height - k) / (float)Math.Tan(angle);
+                    y = height;
+                }
+                else
+                {
+                    x = 1600;
+                    y = width*(float)Math.Tan(angle)+k;
+                }
+            }
+
+            return new Vector2(x, y);
         }
 
         public void Turn(float rotate)

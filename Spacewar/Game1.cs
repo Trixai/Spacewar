@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 
 namespace Spacewar
 {
@@ -56,13 +57,14 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.Space)) player.Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) player.Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) player.Turn(-0.1f);
+
+
+            if (player.Position.X > 1600) player.Position = player.CalculateY();
+            if (player.Position.X < 0) player.Position = player.CalculateY();
+            if(player.Position.Y > 900) player.Position = player.CalculateX();
+            if (player.Position.Y < 0) player.Position = player.CalculateX();
+            //Debug.WriteLine(Math.Acos(Vector2.Normalize(player.Velocity).X));
             
-
-            if (player.Position.X > 1600) player.Position = new Vector2(0, 900-player.Position.Y);
-            if (player.Position.X < 0) player.Position = new Vector2(1600, 900-player.Position.Y);
-            if(player.Position.Y > 900) player.Position = new Vector2(1600-player.Position.X, 0);
-            if (player.Position.Y < 0) player.Position = new Vector2(1600-player.Position.X, 900);
-
             player.Update();
 
             base.Update(gameTime);
