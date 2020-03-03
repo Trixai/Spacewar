@@ -65,6 +65,10 @@ namespace Spacewar
 
             player.Update();
 
+            if(player.Hitbox.Intersects(powerup.Hitbox)){
+                Exit();
+            }
+
             base.Update(gameTime);
         }
 
