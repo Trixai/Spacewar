@@ -17,7 +17,7 @@ namespace Spacewar
         int health = +2;
         double powerTimer = 10000; //10sec
 
-        public Powerup(Texture2D texture, Vector2 pos, Vector2 velocity, Point size) : base(texture, pos, velocity, size)
+        public Powerup(Texture2D texture, Vector2 pos, Vector2 velocity, Point size, int Wheight) : base(texture, pos, velocity, size, Wheight)
         {
 
             

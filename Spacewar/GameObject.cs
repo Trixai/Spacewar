@@ -15,16 +15,17 @@ namespace Spacewar
         public Vector2 Velocity { get; set; }
         public Point Size { get; set; }
 
-        int HEIGHT = 900; 
+        private int WHeight; 
         //public Rectangle Hitbox { get { return new Rectangle(Position.ToPoint(), Size); } }
-        public Rectangle Hitbox { get { return new Rectangle(new Point((int)Position.X,HEIGHT-(int)Position.Y), Size); } }
+        public Rectangle Hitbox{ get { return new Rectangle(new Point((int)Position.X,WHeight-(int)Position.Y), Size); } }
 
-        public GameObject(Texture2D texture,Vector2 pos, Vector2 velocity, Point size)
+        public GameObject(Texture2D texture,Vector2 pos, Vector2 velocity, Point size, int windowHeight)
         {
             Position = pos;
             Velocity = velocity;
             Size = size;
             Texture = texture;
+            WHeight = windowHeight;
         }
 
         public virtual void Update()
