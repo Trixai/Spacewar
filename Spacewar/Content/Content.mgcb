@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ball_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ball_1.png
+
 #begin birdie.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -25,7 +37,7 @@
 /processorParam:TextureFormat=Color
 /build:birdie.png
 
-#begin ball_1.png
+#begin menu.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,7 +47,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:ball_1.png
+/build:menu.jpg
 
 #begin Test.spritefont
 /importer:FontDescriptionImporter

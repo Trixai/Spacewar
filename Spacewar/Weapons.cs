@@ -11,16 +11,5 @@ namespace Spacewar
 {
     class Weapons
     {
-        public SpriteFont font;
-
-        public Interface(SpriteFont font)
-        {
-            this.font = font;
-        }
-
-        public void Draw(string text, SpriteBatch spriteBatch, int X, int Y)
-        {
-            spriteBatch.DrawString(font, text, new Vector2(X, Y), Microsoft.Xna.Framework.Color.Black);
-        }
     }
 }

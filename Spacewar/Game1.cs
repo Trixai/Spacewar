@@ -7,7 +7,6 @@ namespace Spacewar
 {
     public class Game1 : Game
     {
-        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player player;
@@ -28,61 +27,61 @@ namespace Spacewar
             graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferHeight = 900;
             graphics.ApplyChanges();
+
+            GameElements.currentState = GameElements.State.Menu;
+            GameElements.Initialize();
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            
-            player = new Player(Content.Load<Texture2D>("birdie"), new Vector2(500, 250), new Vector2(0, 0), new Point(100, 100));
-
-            powerup = new Powerup(Content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(1,1500), rnd.Next(1,800)), Vector2.Zero , new Point(50,50));
-
-            interFace = new Interface(Content.Load<SpriteFont>("Test"));
+            GameElements.LoadContent(Content);
         }
 
         protected override void UnloadContent()
         {
-
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                this.Exit();
 
-            powerup.Update(gameTime);
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space)) player.Thrust(0.1f);
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) player.Turn(0.1f);
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) player.Turn(-0.1f);
-            
-
-            if (player.Position.X > 1600) player.Position = new Vector2(0, 900-player.Position.Y);
-            if (player.Position.X < 0) player.Position = new Vector2(1600, 900-player.Position.Y);
-            if(player.Position.Y > 900) player.Position = new Vector2(1600-player.Position.X, 0);
-            if (player.Position.Y < 0) player.Position = new Vector2(1600-player.Position.X, 900);
-
-            player.Update();
+            switch (GameElements.currentState)
+            {
+                case GameElements.State.Run:
+                    GameElements.currentState = GameElements.RunUpdate(gameTime);
+                    break;
+                case GameElements.State.Quit:
+                    this.Exit();
+                    break;
+                default:
+                    GameElements.currentState = GameElements.MenuUpdate();
+                    break;
+            }
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            player.Draw(spriteBatch);
-
-            powerup.Draw(spriteBatch);
-
-            spriteBatch.End();
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            interFace.Draw("Health", spriteBatch, 10, 10);
-            interFace.Draw("Health", spriteBatch, 720, 10);
+            
+            switch (GameElements.currentState)
+            {
+                case GameElements.State.Run:
+                    GameElements.RunDraw(spriteBatch);
+                    break;
+                case GameElements.State.Quit:
+                    this.Exit();
+                    break;
+                default:
+                    GameElements.MenuDraw(spriteBatch);
+                    break;
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);
