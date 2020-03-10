@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
-    class Player : GameObject
+    public class Player : GameObject
     {
-        public Player(Texture2D texture, Vector2 pos, Vector2 velocity, Point size, int Wheight) : base(texture,pos,velocity,size,Wheight)
+        public Player(Texture2D texture, Vector2 pos, Vector2 velocity, Point size, int Wwidth,int Wheight) : base(texture,pos,velocity,size,Wheight)
         {
-
+            Width = Wwidth;
+            Height = Wheight;
         }
-
         float rotation = 0; //Radians
         Vector2 vectorScale;
         public int health { get; private set; }
@@ -25,7 +25,10 @@ namespace Spacewar
         float powerTimer;
         bool powerActivated = false;
 
-        float maxSpeed = 15f;
+        int Width;
+        int Height;
+
+        float maxSpeed = 25f;
         public void Thrust(float speed)
         {
             Velocity += new Vector2((float)Math.Cos(-rotation), (float)Math.Sin(-rotation))*speed;
@@ -143,6 +146,15 @@ namespace Spacewar
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(Texture,Hitbox,new Rectangle(0,0,Texture.Width,Texture.Height),Color.White,rotation,new Vector2(Texture.Width/2,Texture.Height/2),SpriteEffects.None,0);
+        }
+
+        public override void Update()
+        {
+            if (Position.X > Width) Position = CalculateY(Width, Height);
+            if (Position.X < 0) Position = CalculateY(Width, Height);
+            if (Position.Y > Height) Position = CalculateX(Width, Height);
+            if (Position.Y < 0) Position = CalculateX(Width, Height);
+            base.Update();
         }
 
         public bool Intersect(Rectangle rect)

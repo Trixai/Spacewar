@@ -36,7 +36,7 @@ namespace Spacewar
             Size = size;
             Texture = texture;
             WHeight = windowHeight;
-            Radius = (size.X + size.Y) / 2f;
+            Radius = (size.X + size.Y) / 4f;
         }
 
         public virtual void Update()

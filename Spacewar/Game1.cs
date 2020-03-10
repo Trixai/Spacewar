@@ -11,7 +11,7 @@ namespace Spacewar
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Player player;
+        PlayerManager playerManager;
         Random rnd = new Random();
         Powerup powerup;
 
@@ -36,8 +36,9 @@ namespace Spacewar
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
-            player = new Player(Content.Load<Texture2D>("birdie"), new Vector2(500, 250), new Vector2(0, 0), new Point(100, 100),height);
+            var texture = Content.Load<Texture2D>("birdie");
+            var size = new Point(100, 100);
+            playerManager = new PlayerManager(texture, texture, size, size, width,height);
 
             powerup = new Powerup(Content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(1,1500), rnd.Next(1,800)), Vector2.Zero , new Point(50,50),height);
         }
@@ -54,22 +55,25 @@ namespace Spacewar
 
             powerup.Update(gameTime);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space)) player.Thrust(0.1f);
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) player.Turn(0.1f);
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) player.Turn(-0.1f);
 
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
 
-            if (player.Position.X > width) player.Position = player.CalculateY(width,height);
-            if (player.Position.X < 0) player.Position = player.CalculateY(width, height);
-            if(player.Position.Y > height) player.Position = player.CalculateX(width, height);
-            if (player.Position.Y < 0) player.Position = player.CalculateX(width, height);
-            
-            player.Update();
+            if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Left)) playerManager.players[1].Turn(-0.1f);
 
-            if(player.Hitbox.Intersects(powerup.Hitbox)){
-                Exit();
+            foreach (var player in playerManager.players)
+            {
+
+                player.Update();
+
+                if (player.HitCircular(powerup.Radius,powerup.Position))
+                {
+                    Exit();
+                }
             }
-
             base.Update(gameTime);
         }
 
@@ -77,8 +81,10 @@ namespace Spacewar
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            player.Draw(spriteBatch);
-
+            foreach (var player in playerManager.players)
+            {
+                player.Draw(spriteBatch);
+            }
             powerup.Draw(spriteBatch);
 
             spriteBatch.End();
