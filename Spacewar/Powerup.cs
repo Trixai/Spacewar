@@ -30,7 +30,7 @@ namespace Spacewar
             {
                 powerTimer = 10000;
             }
-            base.Update();
+            base.Update();                               
         }
     }
 }
