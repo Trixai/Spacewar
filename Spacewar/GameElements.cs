@@ -91,6 +91,8 @@ namespace Spacewar
                 }
             }
 
+            playerManager.Pull(new Vector2(width/2,height/2), 1f);
+
             return State.Run;
         }
 
