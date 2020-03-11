@@ -12,12 +12,14 @@ namespace Spacewar
     class Interface
     {
         public SpriteFont font;
-        public int health;
+        public int points;
+        public int kills;
 
-        public Interface(SpriteFont font, int health)
+        public Interface(SpriteFont font, int points, int kills)
         {
             this.font = font;
-            this.health = health;
+            this.points = points;
+            this.kills = kills;
         }
 
         public void Draw(string text, SpriteBatch spriteBatch, int X, int Y)

@@ -44,6 +44,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameElements.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="Healthbar.cs" />
     <Compile Include="PlayerManager.cs" />
     <Compile Include="Interface.cs" />
     <Compile Include="Powerup.cs" />
