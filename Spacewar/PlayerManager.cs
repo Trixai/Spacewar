@@ -20,6 +20,19 @@ namespace Spacewar
             players[1] = new Player(texture2,RandomPos(),Vector2.Zero,size2,WWidth,WHeight);
         }
 
+        public void Pull(Vector2 Position, float strength)
+        {
+            foreach(var player in players)
+            {
+                float distance = Vector2.Distance(player.Position, Position);
+                float relativeStrength = strength / (float)Math.Sqrt(distance);
+                var dx = player.Position.X - Position.X;
+                var dy = player.Position.Y - Position.Y;
+                var pullVector = relativeStrength*(Vector2.Normalize(new Vector2(dx, dy)));
+                player.Velocity += pullVector;
+            }
+        }
+
         private Point Wsize;
         private Random random;
         public Player[] players;
