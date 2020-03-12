@@ -26,9 +26,7 @@ namespace Spacewar
             {
                 float distance = Vector2.Distance(player.Position, Position);
                 float relativeStrength = strength / (float)Math.Sqrt(distance);
-                var dx = player.Position.X - Position.X;
-                var dy = player.Position.Y - Position.Y;
-                var pullVector = relativeStrength*(Vector2.Normalize(new Vector2(dx, dy)));
+                var pullVector = relativeStrength*(Vector2.Normalize(new Vector2(Position.X-player.Position.X, Position.Y - player.Position.Y)));
                 player.Velocity += pullVector;
             }
         }

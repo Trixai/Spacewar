@@ -117,6 +117,9 @@ namespace Spacewar
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(1141, 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
+
+            playerManager.Pull(new Vector2(width/2,height/2), 1f);
+
             return State.Run;
         }
 
