@@ -24,8 +24,6 @@ namespace Spacewar
         static int width = 1600;
         static int height = 900;
 
-        static int h;
-
         public enum State { Menu, Run, Quit };
         public static State currentState;
 
@@ -102,7 +100,6 @@ namespace Spacewar
                 if (playerManager.players[1].HitCircular(powerup.Radius, powerup.Position))
                 {
                     interfaceManager.healthBars[1].TakeDamage();
-                    h += 1;
                 }
             }
 
@@ -118,7 +115,7 @@ namespace Spacewar
             }
             
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
-            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth) , 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
+            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
 
             playerManager.Pull(new Vector2(width/2,height/2), 1f);
