@@ -18,6 +18,7 @@ namespace Spacewar
         static InterfaceManager interfaceManager;
         static Powerup powerup;
         static Game game;
+        static Blackhole blackhole;
 
         static Random rnd = new Random();
 
@@ -48,6 +49,7 @@ namespace Spacewar
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar"), content.Load<Texture2D>("p2healthbar"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("Test"), 0, 0, 0, 0);
+            blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
         }
 
         public static State MenuUpdate()
@@ -103,6 +105,15 @@ namespace Spacewar
                 }
             }
 
+            if(playerManager.players[0].HitCircular(blackhole.Radius,blackhole.Position))
+            {
+                interfaceManager.healthBars[0].health = 0;
+            }
+            if (playerManager.players[1].HitCircular(blackhole.Radius, blackhole.Position))
+            {
+                interfaceManager.healthBars[1].health = 0;
+            }
+
             if (interfaceManager.healthBars[0].health <=0)
             {
                 interfaceManager.healthBars[0].health = 100;
@@ -118,7 +129,7 @@ namespace Spacewar
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
 
-            playerManager.Pull(new Vector2(width/2,height/2), 1f);
+            playerManager.Pull(blackhole.Position, blackhole.Force);
 
             return State.Run;
         }
