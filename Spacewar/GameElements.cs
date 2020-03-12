@@ -108,6 +108,15 @@ namespace Spacewar
                 }
             }
 
+            if(playerManager.players[0].HitCircular(blackhole.Radius,blackhole.Position))
+            {
+                interfaceManager.healthBars[0].health = 0;
+            }
+            if (playerManager.players[1].HitCircular(blackhole.Radius, blackhole.Position))
+            {
+                interfaceManager.healthBars[1].health = 0;
+            }
+
             if (interfaceManager.healthBars[0].health <=0)
             {
                 interfaceManager.healthBars[0].health = 100;
