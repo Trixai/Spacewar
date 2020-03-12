@@ -9,14 +9,15 @@ namespace Spacewar
     static class GameElements
     {
         static Texture2D menuSprite;
+        static Texture2D background;
         static Vector2 menuPos;
         static Player player;
         static PlayerManager playerManager;
-        static Interface interFace;
-        static Healthbar healthbar;
+        static InterfaceText interfaceText;
+        static Healthbar healthBar;
+        static InterfaceManager interfaceManager;
         static Powerup powerup;
         static Game game;
-        static Texture2D background;
 
         static Random rnd = new Random();
 
@@ -42,9 +43,11 @@ namespace Spacewar
             player = new Player(content.Load<Texture2D>("player1"), new Vector2(500, 250), new Vector2(0, 0), new Point(100, 100), width, height);
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(1, 1500), rnd.Next(1, 800)), Vector2.Zero, new Point(50, 50), height);
-            interFace = new Interface(content.Load<SpriteFont>("Test"), 0, 0);
-            healthbar = new Healthbar(content.Load<Texture2D>("p1healthbar"), content.Load<Texture2D>("p2healthbar"), 100, 100);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
             background = content.Load<Texture2D>("background");
+            healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
+            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar"), content.Load<Texture2D>("p2healthbar"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
+                content.Load<SpriteFont>("Test"), 0, 0, 0, 0);
         }
 
         public static State MenuUpdate()
@@ -82,14 +85,37 @@ namespace Spacewar
 
             foreach (var player in playerManager.players)
             {
-
                 player.Update();
 
-                if (player.HitCircular(powerup.Radius, powerup.Position))
+                //if (player.HitCircular(powerup.Radius, powerup.Position))
+                //{
+                //    game.Exit();
+                //}
+
+                if (playerManager.players[0].HitCircular(powerup.Radius, powerup.Position))
                 {
-                    healthbar.actualHealth -= 1;
+                    interfaceManager.healthBars[0].TakeDamage();
+                }
+
+                if (playerManager.players[1].HitCircular(powerup.Radius, powerup.Position))
+                {
+                    interfaceManager.healthBars[1].TakeDamage();
                 }
             }
+
+            if (interfaceManager.healthBars[0].health <=0)
+            {
+                interfaceManager.healthBars[0].health = 100;
+                playerManager.players[0].Position = playerManager.RandomPos();
+                interfaceManager.interfaceTexts[0].points -= 1;
+            } else if (interfaceManager.healthBars[1].health <=0) {
+                interfaceManager.healthBars[1].health = 100;
+                playerManager.players[1].Position = playerManager.RandomPos();
+                interfaceManager.interfaceTexts[1].points -= 1;
+            }
+            
+            interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
+            interfaceManager.healthBars[1].healthRectangle = new Rectangle(1141, 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
             return State.Run;
         }
@@ -102,20 +128,18 @@ namespace Spacewar
             {
                 player.Draw(spriteBatch);
             }
+
+            interfaceManager.healthBars[0].Draw(spriteBatch);
+            interfaceManager.healthBars[1].Draw(spriteBatch);
+
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), spriteBatch, 675, 50);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), spriteBatch, 900, 50);
+
             powerup.Draw(spriteBatch);
 
-            interFace.Draw("Health", spriteBatch, 725, 10);
-            interFace.Draw("Points", spriteBatch, 730, 50);
-            interFace.Draw("Kills", spriteBatch, 742, 90);
-
-            //interFace.Draw(Convert.ToString(interFace.health), spriteBatch, 635, 10);
-            //interFace.Draw(Convert.ToString(interFace.health), spriteBatch, 900, 10);
-
-            interFace.Draw(Convert.ToString(interFace.points), spriteBatch, 675, 50);
-            interFace.Draw(Convert.ToString(interFace.points), spriteBatch, 900, 50);
-
-            interFace.Draw(Convert.ToString(interFace.kills), spriteBatch, 675, 90);
-            interFace.Draw(Convert.ToString(interFace.kills), spriteBatch, 900, 90);
+            interfaceText.Draw("Health", spriteBatch, 725, 10);
+            interfaceText.Draw("Points", spriteBatch, 730, 50);
+            interfaceText.Draw("Kills", spriteBatch, 742, 90);
         }
     }
 }

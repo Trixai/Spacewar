@@ -10,34 +10,28 @@ namespace Spacewar
 {
     class Healthbar
     {
-        public int actualHealth;
-        public int visibleHealth;
+        private Texture2D healthTexture;
+        public Rectangle healthRectangle;
+        public float health;
 
         public int fullWidth = 406;
+        public float maxHealth = 100;
 
-        public Healthbar(Texture2D healthBarP1, Texture2D healthBarP2, int actualHealth, int visibleHealth)
+        public Healthbar(Texture2D healthTexture, Rectangle healthRectangle, float health)
         {
-            this.actualHealth = actualHealth;
-            this.visibleHealth = visibleHealth;
+            this.healthTexture = healthTexture;
+            this.healthRectangle = healthRectangle;
+            this.health = health;
         }
 
-        public void ResetHealth(int health)
+        public void TakeDamage()
         {
-            actualHealth = visibleHealth = health;
+            health -= 1;
         }
 
-        public void Update()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            if (actualHealth < visibleHealth)
-            {
-                visibleHealth -= 1;
-            }
-            else if (actualHealth != visibleHealth)
-            {
-                visibleHealth = actualHealth;
-            }
-
-             = (healthbar.actualHealth / 100) * fullWidth;
+            spriteBatch.Draw(healthTexture, healthRectangle, Color.White);
         }
     }
 }
