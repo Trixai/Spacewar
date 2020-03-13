@@ -47,7 +47,7 @@ namespace Spacewar
             interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
-            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar"), content.Load<Texture2D>("p2healthbar"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
+            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("Test"), 0, 0, 0, 0);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
         }
