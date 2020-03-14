@@ -11,7 +11,6 @@ namespace Spacewar
         static Texture2D menuSprite;
         static Texture2D background;
         static Vector2 menuPos;
-        static Player player;
         static PlayerManager playerManager;
         static InterfaceText interfaceText;
         static Healthbar healthBar;
@@ -41,7 +40,6 @@ namespace Spacewar
 
             var size = new Point(100, 100);
 
-            player = new Player(content.Load<Texture2D>("player1"), new Vector2(500, 250), new Vector2(0, 0), new Point(100, 100), width, height);
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(1, 1500), rnd.Next(1, 800)), Vector2.Zero, new Point(50, 50), height);
             interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
@@ -71,11 +69,6 @@ namespace Spacewar
         public static State RunUpdate(GameTime gameTime)
         {
             powerup.Update(gameTime);
-
-            if (player.Position.X > 1600) player.Position = new Vector2(0, 900 - player.Position.Y);
-            if (player.Position.X < 0) player.Position = new Vector2(1600, 900 - player.Position.Y);
-            if (player.Position.Y > 900) player.Position = new Vector2(1600 - player.Position.X, 0);
-            if (player.Position.Y < 0) player.Position = new Vector2(1600 - player.Position.X, 900);
 
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
@@ -151,7 +144,6 @@ namespace Spacewar
 
             powerup.Draw(spriteBatch);
 
-            interfaceText.Draw("Health", spriteBatch, 725, 10);
             interfaceText.Draw("Points", spriteBatch, 730, 50);
             interfaceText.Draw("Kills", spriteBatch, 742, 90);
         }
