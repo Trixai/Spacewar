@@ -16,8 +16,7 @@ namespace Spacewar
         public Point Size { get; set; }
         public float Radius { get; set; }
 
-        private int WHeight; 
-        //public Rectangle Hitbox { get { return new Rectangle(Position.ToPoint(), Size); } }
+        private int WHeight;
         public Rectangle Hitbox{ get { return new Rectangle(new Point((int)Position.X,WHeight-(int)Position.Y), Size); } }
 
         public bool HitCircular(float radius,Vector2 position)
