@@ -41,7 +41,7 @@ namespace Spacewar
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
-            powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(1, 1500), rnd.Next(1, 800)), Vector2.Zero, new Point(50, 50), height);
+            powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(50, width-50), rnd.Next(50, height-50)), Vector2.Zero, new Point(50, 50), height);
             interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
@@ -82,42 +82,30 @@ namespace Spacewar
             {
                 player.Update();
 
-                //if (player.HitCircular(powerup.Radius, powerup.Position))
-                //{
-                //    game.Exit();
-                //}
-
-                if (playerManager.players[0].HitCircular(powerup.Radius, powerup.Position))
+                if(player.HitCircular(powerup.Radius,powerup.Position))
                 {
-                    interfaceManager.healthBars[0].TakeDamage();
+                    player.Damage(1);
                 }
 
-                if (playerManager.players[1].HitCircular(powerup.Radius, powerup.Position))
+                if(player.HitCircular(blackhole.Radius,blackhole.Position))
                 {
-                    interfaceManager.healthBars[1].TakeDamage();
+                    player.Damage(100);
+                }
+
+                if (player.Health <= 0)
+                {
+                    player.deathCount += 1;
+                    player.Position = playerManager.RandomPos();
+                    player.Health = 100;
                 }
             }
 
-            if(playerManager.players[0].HitCircular(blackhole.Radius,blackhole.Position))
+            for (int i = 0; i < playerManager.players.Length; i++)
             {
-                interfaceManager.healthBars[0].health = 0;
+                interfaceManager.healthBars[i].health = playerManager.players[i].Health;
+                interfaceManager.interfaceTexts[i].kills = playerManager.players[i].killCount;
+                interfaceManager.interfaceTexts[i].points = playerManager.players[i].killCount - playerManager.players[i].deathCount;
             }
-            if (playerManager.players[1].HitCircular(blackhole.Radius, blackhole.Position))
-            {
-                interfaceManager.healthBars[1].health = 0;
-            }
-
-            if (interfaceManager.healthBars[0].health <=0)
-            {
-                interfaceManager.healthBars[0].health = 100;
-                playerManager.players[0].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[0].points -= 1;
-            } else if (interfaceManager.healthBars[1].health <=0) {
-                interfaceManager.healthBars[1].health = 100;
-                interfaceManager.interfaceTexts[1].points -= 1;
-                playerManager.players[1].Position = playerManager.RandomPos();
-            }
-            
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
