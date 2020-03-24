@@ -97,6 +97,7 @@ namespace Spacewar
                     player.deathCount += 1;
                     player.Position = playerManager.RandomPos();
                     player.Health = 100;
+                    player.Velocity = Vector2.Zero;
                 }
             }
 

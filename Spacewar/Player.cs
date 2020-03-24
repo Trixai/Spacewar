@@ -164,7 +164,7 @@ namespace Spacewar
             return Hitbox.Intersects(rect);
         }
 
-        //Returnar true om död.
+        //Returns true if damage makes it so that health is less than or equal to 0
         public bool Damage(int health)
         {
             Health -= health;
