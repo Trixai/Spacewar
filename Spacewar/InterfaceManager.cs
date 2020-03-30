@@ -12,9 +12,11 @@ namespace Spacewar
     {
         public Healthbar[] healthBars;
         public InterfaceText[] interfaceTexts;
+        public float timeCounter;
+        public bool end;
 
         public InterfaceManager(Texture2D p1HealthTexture, Texture2D p2HealthTexture, Rectangle p1HealthRectangle, Rectangle p2HealthRectangle, float p1Health, float p2Health, 
-            SpriteFont font, int p1Points, int p1Kills, int p2Points, int p2Kills)
+            SpriteFont font, int p1Points, int p1Kills, int p2Points, int p2Kills, float timeCounter)
         {
             healthBars = new Healthbar[2];
             healthBars[0] = new Healthbar(p1HealthTexture, p1HealthRectangle, p1Health);
@@ -23,6 +25,17 @@ namespace Spacewar
             interfaceTexts = new InterfaceText[2];
             interfaceTexts[0] = new InterfaceText(font, p1Points, p1Kills);
             interfaceTexts[1] = new InterfaceText(font, p2Points, p2Kills);
+
+            this.timeCounter = timeCounter;
+        }
+
+        public void Timer()
+        {
+            if (timeCounter <= 0)
+            {
+                timeCounter = 10f;
+                end = true;
+            }
         }
     }
 }
