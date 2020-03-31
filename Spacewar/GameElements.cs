@@ -21,7 +21,6 @@ namespace Spacewar
         static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
-        static Timer timer;
 
         static Random rnd = new Random();
 
@@ -51,9 +50,8 @@ namespace Spacewar
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("Test"), 0, 0, 0, 0, 10);
+                content.Load<SpriteFont>("Test"), 0, 0, 0, 0, 69f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
-            timer = new Timer(10f);
         }
 
         public static State MenuUpdate()
@@ -75,11 +73,12 @@ namespace Spacewar
         public static State RunUpdate(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                return State.Menu;
+            {
+                //return State.Pause;
+                game.Exit();
+            }
 
-            interfaceManager.timeCounter -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            interfaceManager.Timer();
+            interfaceManager.Timer(gameTime);
 
             if (interfaceManager.end == true)
             {
@@ -92,7 +91,7 @@ namespace Spacewar
                 interfaceManager.interfaceTexts[1].points = 0;
 
                 interfaceManager.end = false;
-                interfaceManager.timeCounter = 10f;
+                interfaceManager.timeCounter = 120f;
 
                 return State.SubMenu;
             }
@@ -169,6 +168,8 @@ namespace Spacewar
 
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), spriteBatch, 705, 32);
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), spriteBatch, 870, 32);
+
+            interfaceText.Draw(interfaceManager.timeText, spriteBatch, 705, 100);
 
             powerup.Draw(spriteBatch);
         }

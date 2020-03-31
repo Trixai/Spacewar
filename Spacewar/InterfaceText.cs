@@ -13,19 +13,17 @@ namespace Spacewar
         public SpriteFont font;
         public int points;
         public int kills;
-        public int timer;
 
         public InterfaceText(SpriteFont font, int points, int kills)
         {
             this.font = font;
             this.points = points;
-            this.kills = kills;        }
+            this.kills = kills;
+        }
 
         public void Draw(string text, SpriteBatch spriteBatch, int X, int Y)
         {
             spriteBatch.DrawString(font, text, new Vector2(X, Y), Microsoft.Xna.Framework.Color.White);
         }
-
-
     }
 }

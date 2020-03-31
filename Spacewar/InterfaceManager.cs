@@ -13,6 +13,7 @@ namespace Spacewar
         public Healthbar[] healthBars;
         public InterfaceText[] interfaceTexts;
         public float timeCounter;
+        public string timeText = "";
         public bool end;
 
         public InterfaceManager(Texture2D p1HealthTexture, Texture2D p2HealthTexture, Rectangle p1HealthRectangle, Rectangle p2HealthRectangle, float p1Health, float p2Health, 
@@ -29,12 +30,37 @@ namespace Spacewar
             this.timeCounter = timeCounter;
         }
 
-        public void Timer()
+        public void Timer(GameTime gameTime)
         {
+            timeCounter -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             if (timeCounter <= 0)
             {
-                timeCounter = 10f;
+                timeCounter = 120f;
                 end = true;
+            }
+
+            if (timeCounter >= 60)
+            {
+                if (Convert.ToString(Math.Round(timeCounter - 60f)).Length < 2)
+                {
+                    timeText = "01:0" + Convert.ToString(Math.Round(timeCounter - 60f));
+                }
+                else
+                {
+                    timeText = "01:" + Convert.ToString(Math.Round(timeCounter - 60f));
+                }
+            }
+            else
+            {
+                if (Convert.ToString(Math.Round(timeCounter)).Length < 2)
+                {
+                    timeText = "00:0" + Convert.ToString(Math.Round(timeCounter));
+                }
+                else
+                {
+                    timeText = "00:" + Convert.ToString(Math.Round(timeCounter));
+                }
             }
         }
     }
