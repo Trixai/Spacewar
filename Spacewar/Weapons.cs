@@ -11,5 +11,6 @@ namespace Spacewar
 {
     class Weapons
     {
+        //ttt
     }
 }
