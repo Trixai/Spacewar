@@ -18,7 +18,7 @@ namespace Spacewar
         static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
-        public Weapons Weapons;
+        static Weapons Weapons;
 
         static Random rnd = new Random();
 
@@ -49,6 +49,7 @@ namespace Spacewar
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("Test"), 0, 0, 0, 0);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
+            weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
         public static State MenuUpdate()

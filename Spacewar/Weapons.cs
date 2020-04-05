@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
-    public class Weapons : Sprite
+    public class Weapons : GameObject
     {
         private float timer;
 
