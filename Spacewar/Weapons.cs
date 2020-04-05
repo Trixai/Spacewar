@@ -9,8 +9,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
-    class Weapons
+    public class Weapons : Sprite
     {
-        //ttt
+        private float timer;
+
+        public Weapons(Texture2D texture)
+            : base(texture) //for texture parameters
+        {
+
+        }
+        public override void Update(GameTime gameTime, List<Sprite> sprites)
+        {
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds; //for removal after certan time
+
+            if (timer > LifeSpan)
+            IsRemoved = true;
+
+            Position += Direction * LinearVelocity;  //for movement
+           
+        }
     }
 }
