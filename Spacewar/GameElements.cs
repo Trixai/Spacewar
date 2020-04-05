@@ -18,6 +18,7 @@ namespace Spacewar
         static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
+        public Weapons Weapons;
 
         static Random rnd = new Random();
 
@@ -73,10 +74,25 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Tab)) var bullet = Weapons.Clone() as Weapons;
+            bullet.Direction = this.Direction;
+            bullet.Position = this.Positon;
+            bullet.LinearVelocity = this.LinearVelocity * 2;
+            bullet.LifeSpan = 3f;   
+            bullet.Parent = this;
+            spirtes.Add(weapons); 
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) playerManager.players[1].Turn(-0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Space)) var bullet = Weapons.Clone() as Weapons;
+            bullet.Direction = this.Direction;
+            bullet.Position = this.Positon;
+            bullet.LinearVelocity = this.LinearVelocity * 2;
+            bullet.LifeSpan = 3f;
+            bullet.Parent = this;
+            spirtes.Add(weapons);
 
             foreach (var player in playerManager.players)
             {
