@@ -61,6 +61,13 @@
 /processorParam:TextureFormat=Color
 /build:empty.png
 
+#begin File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:File.spritefont;font2.spritefont
+
 #begin menu.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -162,5 +169,5 @@
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Test.spritefont
+/build:Test.spritefont;font1.spritefont
 

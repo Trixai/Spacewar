@@ -46,11 +46,11 @@ namespace Spacewar
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(50, width-50), rnd.Next(50, height-50)), Vector2.Zero, new Point(50, 50), height);
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("Test"), 0, 0, 0, 0, 69f);
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 6f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
         }
 
@@ -91,7 +91,7 @@ namespace Spacewar
                 interfaceManager.interfaceTexts[1].points = 0;
 
                 interfaceManager.end = false;
-                interfaceManager.timeCounter = 120f;
+                interfaceManager.timeCounter = 180f;
 
                 return State.SubMenu;
             }
@@ -109,11 +109,6 @@ namespace Spacewar
             foreach (var player in playerManager.players)
             {
                 player.Update();
-
-                if(player.HitCircular(powerup.Radius,powerup.Position))
-                {
-                    player.Damage(1);
-                }
 
                 if(player.HitCircular(blackhole.Radius,blackhole.Position))
                 {
@@ -135,11 +130,14 @@ namespace Spacewar
                 interfaceManager.interfaceTexts[i].kills = playerManager.players[i].killCount;
                 interfaceManager.interfaceTexts[i].points = playerManager.players[i].killCount - playerManager.players[i].deathCount;
             }
+
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
+
+            interfaceManager.Winner();
 
             return State.Run;
         }
@@ -156,13 +154,13 @@ namespace Spacewar
             interfaceManager.healthBars[0].Draw(spriteBatch);
             interfaceManager.healthBars[1].Draw(spriteBatch);
 
-            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), spriteBatch, 705, -4);
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), spriteBatch, 870, -4);
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, -4);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, -4);
 
-            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), spriteBatch, 705, 32);
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), spriteBatch, 870, 32);
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, 32);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, 32);
 
-            interfaceText.Draw(interfaceManager.timeText, spriteBatch, 705, 100);
+            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
 
             powerup.Draw(spriteBatch);
         }
@@ -193,7 +191,7 @@ namespace Spacewar
             if (keyboardState.IsKeyDown(Keys.Q))
             {
                 return State.Quit;
-            } 
+            }
 
             return State.SubMenu;
         }
@@ -201,6 +199,7 @@ namespace Spacewar
         public static void SubMenuDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(subMenuSprite, subMenuPos, Color.White);
+            interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font2, spriteBatch, 794, 220);
         }
     }
 }
