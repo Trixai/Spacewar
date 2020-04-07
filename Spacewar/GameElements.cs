@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,6 +22,9 @@ namespace Spacewar
         static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
+
+        static Effect playerEffect1;
+        static Effect playerEffect2;
         //static Weapons Weapons;
 
         static Random rnd = new Random();
@@ -53,6 +57,8 @@ namespace Spacewar
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 180f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
+            playerEffect1 = content.Load<Effect>("playereffect1");
+            playerEffect2 = content.Load<Effect>("playereffect2");
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
@@ -162,12 +168,31 @@ namespace Spacewar
         public static void RunDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-
-            foreach (var player in playerManager.players)
+            spriteBatch.End();
+            //Player thrust effect
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                player.Draw(spriteBatch);
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, playerEffect1, null);
             }
+            else
+            {
+                spriteBatch.Begin();
+            }
+            playerManager.players[0].Draw(spriteBatch);
+            spriteBatch.End();
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, playerEffect2, null);
+            }
+            else
+            {
+                spriteBatch.Begin();
+            }
+            playerManager.players[1].Draw(spriteBatch);
+            spriteBatch.End();
 
+
+            spriteBatch.Begin();
             interfaceManager.healthBars[0].Draw(spriteBatch);
             interfaceManager.healthBars[1].Draw(spriteBatch);
 
