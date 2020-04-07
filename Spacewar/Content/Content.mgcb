@@ -159,6 +159,18 @@
 /processorParam:TextureFormat=Color
 /build:player2.png
 
+#begin playereffect1.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:playereffect1.fx
+
+#begin playereffect2.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:playereffect2.fx
+
 #begin projectile_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
