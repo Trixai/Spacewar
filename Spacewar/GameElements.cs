@@ -21,6 +21,7 @@ namespace Spacewar
         static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
+        static Weapons Weapons;
 
         static Random rnd = new Random();
 
@@ -52,6 +53,7 @@ namespace Spacewar
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 180f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
+            weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
         public static State MenuUpdate()
@@ -101,10 +103,25 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Tab)) var bullet = Weapons.Clone() as Weapons;
+            bullet.Direction = this.Direction;
+            bullet.Position = this.Positon;
+            bullet.LinearVelocity = this.LinearVelocity * 2;
+            bullet.LifeSpan = 3f;   
+            bullet.Parent = this;
+            spirtes.Add(weapons); 
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) playerManager.players[1].Turn(-0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Space)) var bullet = Weapons.Clone() as Weapons;
+            bullet.Direction = this.Direction;
+            bullet.Position = this.Positon;
+            bullet.LinearVelocity = this.LinearVelocity * 2;
+            bullet.LifeSpan = 3f;
+            bullet.Parent = this;
+            spirtes.Add(weapons);
 
             foreach (var player in playerManager.players)
             {

@@ -10,6 +10,10 @@ namespace Spacewar
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Random rnd = new Random();
+        
+  
+
 
         const int width = 1600;
         const int height = 900;

@@ -31,11 +31,15 @@ namespace Spacewar
         int Width;
         int Height;
 
-        float maxSpeed = 25f;
+        float maxSpeed = 10f;
+        
         public void Thrust(float speed)
         {
             Velocity += new Vector2((float)Math.Cos(-rotation), (float)Math.Sin(-rotation))*speed;
-            Velocity = new Vector2(MathHelper.Clamp(Velocity.X, -maxSpeed, maxSpeed), MathHelper.Clamp(Velocity.Y, -maxSpeed, maxSpeed));
+            if(Velocity.Length()>10)
+            {
+                Velocity = maxSpeed * Vector2.Normalize(Velocity);
+            }
         }
         public Vector2 CalculateX(int width, int height)
         {
