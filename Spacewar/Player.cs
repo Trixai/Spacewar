@@ -18,7 +18,7 @@ namespace Spacewar
         }
         float rotation = 0; //Radians
         Vector2 vectorScale;
-        public int Health { get; set; }
+        public int Health { get; set; } = 100;
 
         public int deathCount;
         public int killCount;
@@ -31,11 +31,15 @@ namespace Spacewar
         int Width;
         int Height;
 
-        float maxSpeed = 25f;
+        float maxSpeed = 10f;
+        
         public void Thrust(float speed)
         {
             Velocity += new Vector2((float)Math.Cos(-rotation), (float)Math.Sin(-rotation))*speed;
-            Velocity = new Vector2(MathHelper.Clamp(Velocity.X, -maxSpeed, maxSpeed), MathHelper.Clamp(Velocity.Y, -maxSpeed, maxSpeed));
+            if(Velocity.Length()>10)
+            {
+                Velocity = maxSpeed * Vector2.Normalize(Velocity);
+            }
         }
         public Vector2 CalculateX(int width, int height)
         {
@@ -164,7 +168,7 @@ namespace Spacewar
             return Hitbox.Intersects(rect);
         }
 
-        //Returnar true om död.
+        //Returns true if damage makes it so that health is less than or equal to 0
         public bool Damage(int health)
         {
             Health -= health;

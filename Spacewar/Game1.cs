@@ -11,6 +11,9 @@ namespace Spacewar
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Random rnd = new Random();
+        
+  
+
 
         const int width = 1600;
         const int height = 900;
@@ -44,13 +47,13 @@ namespace Spacewar
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
-
             switch (GameElements.currentState)
             {
                 case GameElements.State.Run:
                     GameElements.currentState = GameElements.RunUpdate(gameTime);
+                    break;
+                case GameElements.State.SubMenu:
+                    GameElements.currentState = GameElements.SubMenuUpdate();
                     break;
                 case GameElements.State.Quit:
                     this.Exit();
@@ -73,6 +76,9 @@ namespace Spacewar
             {
                 case GameElements.State.Run:
                     GameElements.RunDraw(spriteBatch);
+                    break;
+                case GameElements.State.SubMenu:
+                    GameElements.SubMenuDraw(spriteBatch);
                     break;
                 case GameElements.State.Quit:
                     this.Exit();
