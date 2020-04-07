@@ -18,9 +18,9 @@ namespace Spacewar
         static InterfaceText interfaceText;
         static Healthbar healthBar;
         static InterfaceManager interfaceManager;
-        static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
+        static PowerupManager powerupManager;
         //static Weapons Weapons;
 
         static Random rnd = new Random();
@@ -46,8 +46,8 @@ namespace Spacewar
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
-            powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(50, width-50), rnd.Next(50, height-50)), Vector2.Zero, new Point(50, 50), height);
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
+            powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
@@ -157,6 +157,8 @@ namespace Spacewar
 
             interfaceManager.Winner();
 
+            powerupManager.Update(gameTime);
+
             return State.Run;
         }
 
@@ -192,6 +194,7 @@ namespace Spacewar
 
             powerup.Draw(spriteBatch);
         }
+            powerupManager.Draw(spriteBatch);
 
         public static State SubMenuUpdate()
         {
