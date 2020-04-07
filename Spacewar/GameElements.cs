@@ -15,9 +15,9 @@ namespace Spacewar
         static InterfaceText interfaceText;
         static Healthbar healthBar;
         static InterfaceManager interfaceManager;
-        static Powerup powerup;
         static Game game;
         static Blackhole blackhole;
+        static PowerupManager powerupManager;
 
         static Random rnd = new Random();
 
@@ -41,7 +41,7 @@ namespace Spacewar
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
-            powerup = new Powerup(content.Load<Texture2D>("ball_1"), new Vector2(rnd.Next(50, width-50), rnd.Next(50, height-50)), Vector2.Zero, new Point(50, 50), height);
+            powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
             interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
@@ -68,7 +68,7 @@ namespace Spacewar
 
         public static State RunUpdate(GameTime gameTime)
         {
-            powerup.Update(gameTime);
+           
 
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
@@ -82,10 +82,6 @@ namespace Spacewar
             {
                 player.Update();
 
-                if(player.HitCircular(powerup.Radius,powerup.Position))
-                {
-                    player.Damage(1);
-                }
 
                 if(player.HitCircular(blackhole.Radius,blackhole.Position))
                 {
@@ -112,6 +108,8 @@ namespace Spacewar
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
 
+            powerupManager.Update(gameTime);
+
             return State.Run;
         }
 
@@ -130,7 +128,7 @@ namespace Spacewar
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), spriteBatch, 675, 50);
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), spriteBatch, 900, 50);
 
-            powerup.Draw(spriteBatch);
+            powerupManager.Draw(spriteBatch);
 
             interfaceText.Draw("Points", spriteBatch, 730, 50);
             interfaceText.Draw("Kills", spriteBatch, 742, 90);
