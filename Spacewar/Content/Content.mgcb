@@ -61,6 +61,13 @@
 /processorParam:TextureFormat=Color
 /build:empty.png
 
+#begin File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:File.spritefont;font2.spritefont
+
 #begin menu.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -145,6 +152,18 @@
 /processorParam:TextureFormat=Color
 /build:player2.png
 
+#begin subMenu.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:subMenu.png
+
 #begin projectile_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -186,5 +205,5 @@
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Test.spritefont
+/build:Test.spritefont;font1.spritefont
 

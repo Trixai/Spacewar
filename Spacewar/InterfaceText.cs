@@ -10,22 +10,22 @@ namespace Spacewar
 {
     class InterfaceText
     {
-        public SpriteFont font;
+        public SpriteFont font1;
+        public SpriteFont font2;
         public int points;
         public int kills;
 
-        public InterfaceText(SpriteFont font, int points, int kills)
+        public InterfaceText(SpriteFont font1, SpriteFont font2, int points, int kills)
         {
-            this.font = font;
+            this.font1 = font1;
+            this.font2 = font2;
             this.points = points;
             this.kills = kills;
         }
 
-        public void Draw(string text, SpriteBatch spriteBatch, int X, int Y)
+        public void Draw(string text, SpriteFont font, SpriteBatch spriteBatch, int X, int Y)
         {
             spriteBatch.DrawString(font, text, new Vector2(X, Y), Microsoft.Xna.Framework.Color.White);
         }
-
-
     }
 }

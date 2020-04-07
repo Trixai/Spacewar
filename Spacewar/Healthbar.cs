@@ -13,9 +13,8 @@ namespace Spacewar
         private Texture2D healthTexture;
         public Rectangle healthRectangle;
         public float health;
-
+        public int maxHealth = 100;
         public int fullWidth = 406;
-        public float maxHealth = 100;
 
         public Healthbar(Texture2D healthTexture, Rectangle healthRectangle, float health)
         {
