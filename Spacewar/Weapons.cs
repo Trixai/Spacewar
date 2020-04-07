@@ -9,10 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
-    public class Weapons : GameObject
+    /*public class Weapons : GameObject
     {
         private float timer;
 
+        
         public Weapons(Texture2D texture)
             : base(texture) //for texture parameters
         {
@@ -28,5 +29,5 @@ namespace Spacewar
             Position += Direction * LinearVelocity;  //for movement
            
         }
-    }
+    }*/
 }

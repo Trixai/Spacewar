@@ -18,7 +18,7 @@ namespace Spacewar
         }
         float rotation = 0; //Radians
         Vector2 vectorScale;
-        public int Health { get; set; }
+        public int Health { get; set; } = 100;
 
         public int deathCount;
         public int killCount;
