@@ -45,11 +45,11 @@ namespace Spacewar
             {
                 if (Convert.ToString(Math.Round(timeCounter - 120f)).Length < 2)
                 {
-                    timeText = "02:0" + Convert.ToString(Math.Round(timeCounter - 60f));
+                    timeText = "02:0" + Convert.ToString(Math.Round(timeCounter - 120f));
                 }
                 else
                 {
-                    timeText = "02:" + Convert.ToString(Math.Round(timeCounter - 60f));
+                    timeText = "02:" + Convert.ToString(Math.Round(timeCounter - 120f));
                 }
             }
             else if (timeCounter >= 60)

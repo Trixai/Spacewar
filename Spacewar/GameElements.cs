@@ -50,7 +50,7 @@ namespace Spacewar
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 6f);
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 180f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
         }
 
@@ -154,7 +154,15 @@ namespace Spacewar
             interfaceManager.healthBars[0].Draw(spriteBatch);
             interfaceManager.healthBars[1].Draw(spriteBatch);
 
-            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, -4);
+            if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length >= 3)
+            {
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 675, -4);
+            }
+            else
+            {
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 695, -4);
+            }
+
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, -4);
 
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, 32);
