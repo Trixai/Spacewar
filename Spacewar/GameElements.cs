@@ -51,7 +51,7 @@ namespace Spacewar
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 180f);
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 10f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
@@ -84,16 +84,17 @@ namespace Spacewar
 
             if (interfaceManager.end == true)
             {
-                interfaceManager.healthBars[0].health = 100;
-                playerManager.players[0].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[0].points = 0;
+                interfaceManager.timeCounter = 180f;
 
-                interfaceManager.healthBars[1].health = 100;
-                playerManager.players[1].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[1].points = 0;
+                foreach (var player in playerManager.players)
+                {
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
+                    player.killCount = 0;
+                    player.deathCount = 0;
+                }
 
                 interfaceManager.end = false;
-                interfaceManager.timeCounter = 180f;
 
                 return State.SubMenu;
             }
@@ -168,8 +169,10 @@ namespace Spacewar
                 player.Draw(spriteBatch);
             }
 
-            interfaceManager.healthBars[0].Draw(spriteBatch);
-            interfaceManager.healthBars[1].Draw(spriteBatch);
+            foreach (var healthbar in interfaceManager.healthBars)
+            {
+                healthbar.Draw(spriteBatch);
+            }
 
             if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length >= 3)
             {
@@ -195,15 +198,14 @@ namespace Spacewar
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.R))
             {
-                interfaceManager.healthBars[0].health = 100;
-                playerManager.players[0].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[0].points = 0;
-                interfaceManager.interfaceTexts[0].kills = 0;
+                foreach (var player in playerManager.players)
+                {
+                    player.deathCount = 0;
+                    player.killCount = 0;
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
 
-                interfaceManager.healthBars[1].health = 100;
-                playerManager.players[1].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[1].points = 0;
-                interfaceManager.interfaceTexts[1].kills = 0;
+                }
 
                 return State.Run;
             }
