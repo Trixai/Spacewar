@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
+    //Alex
     class InterfaceManager
     {
         public Healthbar[] healthBars;
         public InterfaceText[] interfaceTexts;
         public float timeCounter;
         public string timeText = "";
-        public bool end;
+        public bool endGame;
         public string winner;
 
         public InterfaceManager(Texture2D p1HealthTexture, Texture2D p2HealthTexture, Rectangle p1HealthRectangle, Rectangle p2HealthRectangle, float p1Health, float p2Health, 
@@ -31,6 +32,7 @@ namespace Spacewar
             this.timeCounter = timeCounter;
         }
 
+        //Skapar en timer
         public void Timer(GameTime gameTime)
         {
             timeCounter -= (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -38,9 +40,10 @@ namespace Spacewar
             if (timeCounter <= 0)
             {
                 timeCounter = 180f;
-                end = true;
+                endGame = true;
             }
 
+            //Skapar timer texten till minutvisare
             if (timeCounter >= 120)
             {
                 if (Convert.ToString(Math.Round(timeCounter - 120f)).Length < 2)
@@ -76,6 +79,7 @@ namespace Spacewar
             }
         }
 
+        //Kollar vilken spelare som har flest poäng och sätter spelaren som vinnare.
         public void Winner()
         {
             if (interfaceTexts[0].points > interfaceTexts[1].points)

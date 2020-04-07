@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Spacewar
 {
+    //Alex gjorde klassen, alla i gruppen har ändrat i koden
     static class GameElements
     {
         static Texture2D menuSprite;
@@ -47,7 +48,7 @@ namespace Spacewar
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
@@ -82,7 +83,7 @@ namespace Spacewar
 
             interfaceManager.Timer(gameTime);
 
-            if (interfaceManager.end == true)
+            if (interfaceManager.endGame == true)
             {
                 interfaceManager.timeCounter = 180f;
 
@@ -94,7 +95,7 @@ namespace Spacewar
                     player.deathCount = 0;
                 }
 
-                interfaceManager.end = false;
+                interfaceManager.endGame = false;
 
                 return State.SubMenu;
             }
