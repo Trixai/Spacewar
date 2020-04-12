@@ -16,12 +16,14 @@ namespace Spacewar
             Width = Wwidth;
             Height = Wheight;
         }
-        float rotation = 0; //Radians
-        Vector2 vectorScale;
+        //Rotation in radians
+        float rotation = 0; 
+
         public int Health { get; set; } = 100;
 
         public int deathCount;
         public int killCount;
+
 
         float fireRate;
         //Weapon weapon;
@@ -32,7 +34,7 @@ namespace Spacewar
         int Height;
 
         float maxSpeed = 10f;
-        
+        //Thrust that depends on the direction that the player is looking.
         public void Thrust(float speed)
         {
             Velocity += new Vector2((float)Math.Cos(-rotation), (float)Math.Sin(-rotation))*speed;
@@ -41,6 +43,7 @@ namespace Spacewar
                 Velocity = maxSpeed * Vector2.Normalize(Velocity);
             }
         }
+        //Calculates the position that the player should be put when the player goes outside the boundaries of the game window.
         public Vector2 CalculateX(int width, int height)
         {
             var normal = Vector2.Normalize(Velocity);
