@@ -52,12 +52,12 @@ namespace Spacewar
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 10f);
-            blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 0, 0, 180f);
+            blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
@@ -83,12 +83,13 @@ namespace Spacewar
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                //return State.Pause;
-                game.Exit();
+                return State.Menu;
+                //game.Exit();
             }
 
             interfaceManager.Timer(gameTime);
 
+            //Resets everything after game end
             if (interfaceManager.endGame == true)
             {
                 interfaceManager.timeCounter = 180f;
@@ -134,7 +135,7 @@ namespace Spacewar
             {
                 player.Update();
 
-                if(player.HitCircular(blackhole.Radius,blackhole.Position))
+                if (player.HitCircular(blackhole.Radius, blackhole.Position))
                 {
                     player.Damage(100);
                 }
@@ -153,10 +154,12 @@ namespace Spacewar
                 interfaceManager.healthBars[i].health = playerManager.players[i].Health;
                 interfaceManager.interfaceTexts[i].kills = playerManager.players[i].killCount;
                 interfaceManager.interfaceTexts[i].points = playerManager.players[i].killCount - playerManager.players[i].deathCount;
+                interfaceManager.interfaceTexts[i].deaths = playerManager.players[i].deathCount;
             }
 
+            //Create resizeable rectangles for healthbars
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
-            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
+            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141 + (1 - (interfaceManager.healthBars[1].health / healthBar.maxHealth)) * healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
@@ -172,6 +175,7 @@ namespace Spacewar
         {
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             spriteBatch.End();
+
             //Player thrust effect
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
@@ -181,8 +185,11 @@ namespace Spacewar
             {
                 spriteBatch.Begin();
             }
+
             playerManager.players[0].Draw(spriteBatch);
+
             spriteBatch.End();
+
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, playerEffect2, null);
@@ -191,30 +198,43 @@ namespace Spacewar
             {
                 spriteBatch.Begin();
             }
+
             playerManager.players[1].Draw(spriteBatch);
+
             spriteBatch.End();
 
             spriteBatch.Begin();
+
             foreach (var healthbar in interfaceManager.healthBars)
             {
                 healthbar.Draw(spriteBatch);
             }
 
-            if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length >= 3)
+            if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length > 1)
             {
-                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 675, -4);
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 700, 0);
             }
             else
             {
-                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 695, -4);
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 715, 0);
             }
 
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, -4);
+            if (Convert.ToString(interfaceManager.interfaceTexts[1].points).Length > 1)
+            {
+                interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 845, 0);
+            }
+            else
+            {
+                interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 855, 0);
+            }
 
-            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, 32);
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, 32);
+            //Draw kills and deaths
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 495, -2);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1005, -2);
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 590, -2);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1100, -2);
 
-            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
+            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 760, 85);
 
             powerupManager.Draw(spriteBatch);
         }

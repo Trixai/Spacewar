@@ -15,13 +15,15 @@ namespace Spacewar
         public SpriteFont font2;
         public int points;
         public int kills;
+        public int deaths;
 
-        public InterfaceText(SpriteFont font1, SpriteFont font2, int points, int kills)
+        public InterfaceText(SpriteFont font1, SpriteFont font2, int points, int kills, int deaths)
         {
             this.font1 = font1;
             this.font2 = font2;
             this.points = points;
             this.kills = kills;
+            this.deaths = deaths;
         }
 
         public void Draw(string text, SpriteFont font, SpriteBatch spriteBatch, int X, int Y)
