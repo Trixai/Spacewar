@@ -19,6 +19,7 @@ namespace Spacewar
         private int WHeight;
         public Rectangle Hitbox{ get { return new Rectangle(new Point((int)Position.X,WHeight-(int)Position.Y), Size); } }
 
+        //A hit detection function based on circles
         public bool HitCircular(float radius,Vector2 position)
         {
             var dx = Position.X - position.X;
