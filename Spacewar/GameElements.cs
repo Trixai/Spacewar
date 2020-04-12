@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Spacewar
 {
+    //Alex gjorde klassen, alla i gruppen har ändrat i koden
     static class GameElements
     {
         static Texture2D menuSprite;
@@ -88,7 +89,7 @@ namespace Spacewar
 
             interfaceManager.Timer(gameTime);
 
-            if (interfaceManager.end == true)
+            if (interfaceManager.endGame == true)
             {
                 interfaceManager.timeCounter = 180f;
 
@@ -100,7 +101,7 @@ namespace Spacewar
                     player.deathCount = 0;
                 }
 
-                interfaceManager.end = false;
+                interfaceManager.endGame = false;
 
                 return State.SubMenu;
             }
