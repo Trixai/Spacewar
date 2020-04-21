@@ -13,14 +13,16 @@ namespace Spacewar
     {
         public SpriteFont font1;
         public SpriteFont font2;
+        public SpriteFont font3;
         public int points;
         public int kills;
         public int deaths;
 
-        public InterfaceText(SpriteFont font1, SpriteFont font2, int points, int kills, int deaths)
+        public InterfaceText(SpriteFont font1, SpriteFont font2, SpriteFont font3, int points, int kills, int deaths)
         {
             this.font1 = font1;
             this.font2 = font2;
+            this.font3 = font3;
             this.points = points;
             this.kills = kills;
             this.deaths = deaths;

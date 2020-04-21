@@ -52,11 +52,11 @@ namespace Spacewar
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 0, 0, 180f);
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
@@ -273,7 +273,7 @@ namespace Spacewar
         public static void SubMenuDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(subMenuSprite, subMenuPos, Color.White);
-            interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font2, spriteBatch, 794, 220);
+            interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font3, spriteBatch, 794, 220);
         }
     }
 }
