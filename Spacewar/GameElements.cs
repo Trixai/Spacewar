@@ -14,9 +14,9 @@ namespace Spacewar
     {
         static Texture2D menuSprite;
         static Texture2D subMenuSprite;
+        static Texture2D pauseSprite;
         static Texture2D background;
-        static Vector2 menuPos;
-        static Vector2 subMenuPos;
+        static Vector2 backgroundPos;
         static PlayerManager playerManager;
         static InterfaceText interfaceText;
         static Healthbar healthBar;
@@ -36,20 +36,19 @@ namespace Spacewar
         static int width = 1600;
         static int height = 900;
 
-        public enum State { Menu, Run, SubMenu, Quit };
+        public enum State { Menu, Run, Pause, SubMenu, Quit };
         public static State currentState;
 
         public static void Initialize() { }
 
         public static void LoadContent(ContentManager content)
         {
-            menuSprite = content.Load<Texture2D>("menu");
-            menuPos.X = 0;
-            menuPos.Y = 0;
+            backgroundPos.X = 0;
+            backgroundPos.Y = 0;
 
+            menuSprite = content.Load<Texture2D>("menu");
             subMenuSprite = content.Load<Texture2D>("subMenu");
-            subMenuPos.X = 0;
-            subMenuPos.Y = 0;
+            pauseSprite = content.Load<Texture2D>("pauseMenu");
 
             bgmusic = content.Load<Song>("bgmusic");
             MediaPlayer.IsRepeating = true;
@@ -86,7 +85,7 @@ namespace Spacewar
 
         public static void MenuDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(menuSprite, menuPos, Color.White);
+            spriteBatch.Draw(menuSprite, backgroundPos, Color.White);
         }
 
         public static State RunUpdate(GameTime gameTime)
@@ -94,8 +93,7 @@ namespace Spacewar
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 MediaPlayer.Pause();
-                return State.Menu;
-                //game.Exit();
+                return State.Pause;
             }
 
             interfaceManager.Timer(gameTime);
@@ -249,7 +247,47 @@ namespace Spacewar
 
             powerupManager.Draw(spriteBatch);
         }
-            
+
+        public static State PauseUpdate()
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.C))
+            {
+                MediaPlayer.Resume();
+                return State.Run;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                foreach (var player in playerManager.players)
+                {
+                    player.deathCount = 0;
+                    player.killCount = 0;
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
+
+                }
+
+                MediaPlayer.Play(bgmusic);
+                return State.Run;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.M))
+            {
+                return State.Menu;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Q))
+                return State.Quit;
+
+            return State.Pause;
+        }
+
+        public static void PauseDraw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(pauseSprite, backgroundPos, Color.White);
+        }
+
 
         public static State SubMenuUpdate()
         {
@@ -283,7 +321,7 @@ namespace Spacewar
 
         public static void SubMenuDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(subMenuSprite, subMenuPos, Color.White);
+            spriteBatch.Draw(subMenuSprite, backgroundPos, Color.White);
             interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font3, spriteBatch, 794, 220);
         }
     }
