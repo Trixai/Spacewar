@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Spacewar
 {
@@ -23,6 +24,8 @@ namespace Spacewar
         static Game game;
         static Blackhole blackhole;
         static PowerupManager powerupManager;
+
+        static Song bgmusic;
 
         static Effect playerEffect1;
         static Effect playerEffect2;
@@ -48,6 +51,10 @@ namespace Spacewar
             subMenuPos.X = 0;
             subMenuPos.Y = 0;
 
+            bgmusic = content.Load<Song>("bgmusic");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.1f;
+
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
@@ -67,7 +74,10 @@ namespace Spacewar
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.S))
+            {
+                MediaPlayer.Play(bgmusic);
                 return State.Run;
+            }
             if (keyboardState.IsKeyDown(Keys.Q))
                 return State.Quit;
 
@@ -83,6 +93,7 @@ namespace Spacewar
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
+                MediaPlayer.Pause();
                 //return State.Pause;
                 game.Exit();
             }
