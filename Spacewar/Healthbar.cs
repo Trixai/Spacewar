@@ -24,11 +24,6 @@ namespace Spacewar
             this.health = health;
         }
 
-        public void TakeDamage()
-        {
-            health -= 1;
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(healthTexture, healthRectangle, Color.White);

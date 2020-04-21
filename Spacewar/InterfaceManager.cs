@@ -19,15 +19,15 @@ namespace Spacewar
         public string winner;
 
         public InterfaceManager(Texture2D p1HealthTexture, Texture2D p2HealthTexture, Rectangle p1HealthRectangle, Rectangle p2HealthRectangle, float p1Health, float p2Health, 
-            SpriteFont font1, SpriteFont font2, int p1Points, int p1Kills, int p2Points, int p2Kills, float timeCounter)
+            SpriteFont font1, SpriteFont font2, SpriteFont font3, int p1Points, int p1Kills, int p1deaths, int p2Points, int p2Kills, int p2deaths,float timeCounter)
         {
             healthBars = new Healthbar[2];
             healthBars[0] = new Healthbar(p1HealthTexture, p1HealthRectangle, p1Health);
             healthBars[1] = new Healthbar(p2HealthTexture, p2HealthRectangle, p2Health);
 
             interfaceTexts = new InterfaceText[2];
-            interfaceTexts[0] = new InterfaceText(font1, font2, p1Points, p1Kills);
-            interfaceTexts[1] = new InterfaceText(font1, font2, p2Points, p2Kills);
+            interfaceTexts[0] = new InterfaceText(font1, font2, font3, p1Points, p1Kills, p1deaths);
+            interfaceTexts[1] = new InterfaceText(font1, font2, font3, p2Points, p2Kills, p2deaths);
 
             this.timeCounter = timeCounter;
         }
@@ -89,6 +89,10 @@ namespace Spacewar
             else if (interfaceTexts[1].points > interfaceTexts[0].points)
             {
                 winner = "Player 2";
+            }
+            else if (interfaceTexts[1].points == interfaceTexts[0].points)
+            {
+                winner = "Draw";
             }
         }
     }
