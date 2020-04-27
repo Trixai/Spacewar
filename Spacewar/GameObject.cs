@@ -15,8 +15,10 @@ namespace Spacewar
         public Vector2 Velocity { get; set; }
         public Point Size { get; set; }
         public float Radius { get; set; }
-
+        
+        //Window height
         private int WHeight;
+
         public Rectangle Hitbox{ get { return new Rectangle(new Point((int)Position.X,WHeight-(int)Position.Y), Size); } }
 
         //A hit detection function based on circles
