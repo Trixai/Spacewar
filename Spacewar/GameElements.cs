@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,6 +28,9 @@ namespace Spacewar
         static PowerupManager powerupManager;
 
         static Song bgmusic;
+        static List<SoundEffect> soundEffects;
+        static List<SoundEffectInstance> instances;
+        static bool isPlaying = false;
 
         static Effect playerEffect1;
         static Effect playerEffect2;
@@ -48,24 +53,37 @@ namespace Spacewar
 
             menuSprite = content.Load<Texture2D>("menu");
             subMenuSprite = content.Load<Texture2D>("subMenu");
-            pauseSprite = content.Load<Texture2D>("pauseMenu");
+            pauseSprite = content.Load<Texture2D>("pauseMenu");            
 
             bgmusic = content.Load<Song>("bgmusic");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.1f;
 
+
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
+            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
+
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
-            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
+
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
+
+            soundEffects = new List<SoundEffect>();
+            soundEffects.Add(content.Load<SoundEffect>("p1thruster"));
+            soundEffects.Add(content.Load<SoundEffect>("p1gun"));
+
+            instances = new List<SoundEffectInstance>();
+            instances.Add(soundEffects[0].CreateInstance());
+            instances.Add(soundEffects[1].CreateInstance());
+
+
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
@@ -116,18 +134,39 @@ namespace Spacewar
                 return State.SubMenu;
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                playerManager.players[0].Thrust(0.1f);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
+                instances[0].IsLooped = true;
+                instances[0].Volume = 0.05f;
+                instances[0].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.S))
+            {
+                instances[0].Stop();
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
-            /*if (Keyboard.GetState().IsKeyDown(Keys.Tab)) var bullet = Weapons.Clone() as Weapons;
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                instances[1].IsLooped = true;
+                instances[1].Volume = 0.05f;
+                instances[1].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.W))
+            {
+                instances[1].Stop();
+            }
+
+            /*var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
             bullet.Position = this.Positon;
             bullet.LinearVelocity = this.LinearVelocity * 2;
             bullet.LifeSpan = 3f;   
             bullet.Parent = this;
             spirtes.Add(weapons); */
-
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);

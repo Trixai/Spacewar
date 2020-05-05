@@ -100,6 +100,12 @@
 /processorParam:TextureFormat=Color
 /build:menu.jpg
 
+#begin p1gun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:p1gun.wav
+
 #begin p1healthbar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -124,11 +130,11 @@
 /processorParam:TextureFormat=Color
 /build:p1healthbar2.png
 
-#begin p1thruster.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin p1thruster.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:p1thruster.mp3
+/build:p1thruster.wav
 
 #begin p2healthbar.png
 /importer:TextureImporter
