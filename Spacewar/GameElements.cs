@@ -78,10 +78,14 @@ namespace Spacewar
             soundEffects = new List<SoundEffect>();
             soundEffects.Add(content.Load<SoundEffect>("p1thruster"));
             soundEffects.Add(content.Load<SoundEffect>("p1gun"));
+            soundEffects.Add(content.Load<SoundEffect>("p2thruster"));
+            soundEffects.Add(content.Load<SoundEffect>("p2gun"));
 
             instances = new List<SoundEffectInstance>();
             instances.Add(soundEffects[0].CreateInstance());
             instances.Add(soundEffects[1].CreateInstance());
+            instances.Add(soundEffects[2].CreateInstance());
+            instances.Add(soundEffects[3].CreateInstance());
 
 
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
@@ -149,6 +153,7 @@ namespace Spacewar
 
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
+
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 instances[1].IsLooped = true;
@@ -168,9 +173,33 @@ namespace Spacewar
             bullet.Parent = this;
             spirtes.Add(weapons); */
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                playerManager.players[1].Thrust(0.1f);
+
+                instances[2].IsLooped = true;
+                instances[2].Volume = 0.1f;
+                instances[2].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.Down))
+            {
+                instances[2].Stop();
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) playerManager.players[1].Turn(-0.1f);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                instances[3].IsLooped = true;
+                instances[3].Volume = 0.1f;
+                instances[3].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.Up))
+            {
+                instances[3].Stop();
+            }
+
             /*if (Keyboard.GetState().IsKeyDown(Keys.Space)) var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
             bullet.Position = this.Positon;

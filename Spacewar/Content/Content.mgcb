@@ -136,6 +136,12 @@
 /processorParam:Quality=Best
 /build:p1thruster.wav
 
+#begin p2gun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:p2gun.wav
+
 #begin p2healthbar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -159,6 +165,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:p2healthbar2.png
+
+#begin p2thruster.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:p2thruster.wav
 
 #begin pauseMenu.png
 /importer:TextureImporter
