@@ -139,7 +139,7 @@ namespace Spacewar
                 playerManager.players[0].Thrust(0.1f);
 
                 instances[0].IsLooped = true;
-                instances[0].Volume = 0.05f;
+                instances[0].Volume = 0.1f;
                 instances[0].Play();
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.S))
@@ -152,7 +152,7 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 instances[1].IsLooped = true;
-                instances[1].Volume = 0.05f;
+                instances[1].Volume = 0.1f;
                 instances[1].Play();
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.W))
