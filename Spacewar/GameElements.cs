@@ -253,6 +253,8 @@ namespace Spacewar
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             spriteBatch.End();
 
+
+            //Gjord av Samuel
             //Player thrust effect
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {

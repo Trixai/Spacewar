@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
+    //Gjord av Samuel
     public class GameObject
     {
         public Texture2D Texture { get; set; }

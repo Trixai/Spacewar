@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
+    //Gjord av Samuel
     public class PlayerManager
     {
         public PlayerManager(Texture2D texture1, Texture2D texture2,Point size1,Point size2,int WWidth,int WHeight)

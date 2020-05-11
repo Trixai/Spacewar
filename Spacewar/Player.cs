@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
+    //Gjord av Samuel
     public class Player : GameObject
     {
         public Player(Texture2D texture, Vector2 pos, Vector2 velocity, Point size, int Wwidth,int Wheight) : base(texture,pos,velocity,size,Wheight)
