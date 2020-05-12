@@ -13,7 +13,7 @@ namespace Spacewar
     {
         Random rnd = new Random();
         double powerTimer = 10000; //10sec
-        List<Powerup> powerUps = new List<Powerup>();
+        public List<Powerup> powerUps = new List<Powerup>();
 
         int height;
 
@@ -28,10 +28,16 @@ namespace Spacewar
 
         public void add()
         {
+            
             Powerup powerUp = new Powerup(powerUpTexture, new Vector2(rnd.Next(1500), rnd.Next(800)), Vector2.Zero ,new Point(50), height);
 
             powerUps.Add(powerUp);
 
+        }
+
+        public void remove(Powerup powerup)
+        {
+            powerUps.Remove(powerup);
         }
 
         public void Draw(SpriteBatch sb)

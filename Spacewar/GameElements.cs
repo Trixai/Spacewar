@@ -21,6 +21,7 @@ namespace Spacewar
         static Game game;
         static Blackhole blackhole;
         static PowerupManager powerupManager;
+        static Powerup powerup;
         //static Weapons Weapons;
 
         static Random rnd = new Random();
@@ -47,7 +48,7 @@ namespace Spacewar
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("Test"), 0, 0);
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
@@ -98,7 +99,7 @@ namespace Spacewar
                 return State.SubMenu;
             }
 
-            powerup.Update(gameTime);
+           
 
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
@@ -127,6 +128,15 @@ namespace Spacewar
             {
                 player.Update();
 
+                foreach(var powerup in powerupManager.powerUps.ToArray())
+                {
+                    if(player.HitCircular(powerup.Radius, powerup.Position))
+                    {
+                        powerupManager.remove(powerup);
+                        
+                    }
+                }
+
                 if(player.HitCircular(blackhole.Radius,blackhole.Position))
                 {
                     player.Damage(100);
@@ -139,6 +149,8 @@ namespace Spacewar
                     player.Health = 100;
                     player.Velocity = Vector2.Zero;
                 }
+
+                
             }
 
             for (int i = 0; i < playerManager.players.Length; i++)
@@ -151,6 +163,7 @@ namespace Spacewar
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
+            
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
 
@@ -188,10 +201,10 @@ namespace Spacewar
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, 32);
 
             interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
-
-            powerup.Draw(spriteBatch);
-        }
             powerupManager.Draw(spriteBatch);
+
+        }
+            
 
         public static State SubMenuUpdate()
         {
