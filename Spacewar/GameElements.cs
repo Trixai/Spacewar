@@ -69,7 +69,6 @@ namespace Spacewar
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
 
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
-            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
@@ -333,8 +332,6 @@ namespace Spacewar
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 590, -2);
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1100, -2);
 
-            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 760, 85);
-
             powerupManager.Draw(spriteBatch);
         }
 
@@ -376,10 +373,7 @@ namespace Spacewar
         public static void PauseDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(pauseSprite, backgroundPos, Color.White);
-        }
-
-        }
-            
+        } 
 
         public static State SubMenuUpdate()
         {
