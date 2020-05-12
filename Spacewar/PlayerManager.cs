@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
+    //Gjord av Samuel
     public class PlayerManager
     {
         public PlayerManager(Texture2D texture1, Texture2D texture2,Point size1,Point size2,int WWidth,int WHeight)
@@ -20,6 +21,7 @@ namespace Spacewar
             players[1] = new Player(texture2,RandomPos(),Vector2.Zero,size2,WWidth,WHeight);
         }
 
+        //Function that pulls the players towards a position, strength of the pull dictated by the product of a constnat and the inverse square of the distance.
         public void Pull(Vector2 Position, float strength)
         {
             foreach(var player in players)
@@ -35,6 +37,7 @@ namespace Spacewar
         private Random random;
         public Player[] players;
 
+        //Creates a random position for the player to spawn on.
         public Vector2 RandomPos() { return new Vector2(random.Next(0, Wsize.X), random.Next(0, Wsize.Y)); }
     }
 }

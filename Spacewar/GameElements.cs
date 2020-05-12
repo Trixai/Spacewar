@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Timers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Spacewar
 {
+    //Alex gjorde klassen, alla i gruppen har ändrat i koden
     static class GameElements
     {
         static Texture2D menuSprite;
         static Texture2D subMenuSprite;
+        static Texture2D pauseSprite;
         static Texture2D background;
-        static Vector2 menuPos;
-        static Vector2 subMenuPos;
+        static Vector2 backgroundPos;
         static PlayerManager playerManager;
         static InterfaceText interfaceText;
         static Healthbar healthBar;
@@ -21,6 +26,14 @@ namespace Spacewar
         static Game game;
         static Blackhole blackhole;
         static PowerupManager powerupManager;
+
+        static Song bgmusic;
+        static List<SoundEffect> soundEffects;
+        static List<SoundEffectInstance> instances;
+        static bool isPlaying = false;
+
+        static Effect playerEffect1;
+        static Effect playerEffect2;
         static Powerup powerup;
         //static Weapons Weapons;
 
@@ -29,31 +42,54 @@ namespace Spacewar
         static int width = 1600;
         static int height = 900;
 
-        public enum State { Menu, Run, SubMenu, Quit };
+        public enum State { Menu, Run, Pause, SubMenu, Quit };
         public static State currentState;
 
         public static void Initialize() { }
 
         public static void LoadContent(ContentManager content)
         {
-            menuSprite = content.Load<Texture2D>("menu");
-            menuPos.X = 0;
-            menuPos.Y = 0;
+            backgroundPos.X = 0;
+            backgroundPos.Y = 0;
 
+            menuSprite = content.Load<Texture2D>("menu");
             subMenuSprite = content.Load<Texture2D>("subMenu");
-            subMenuPos.X = 0;
-            subMenuPos.Y = 0;
+            pauseSprite = content.Load<Texture2D>("pauseMenu");            
+
+            bgmusic = content.Load<Song>("bgmusic");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.1f;
+
 
             var size = new Point(100, 100);
 
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
+            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
+                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
+
+            interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
-            interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
-                content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), 0, 0, 0, 0, 180f);
-            blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height,1f);
+            blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
+
+            playerEffect1 = content.Load<Effect>("playereffect1");
+            playerEffect2 = content.Load<Effect>("playereffect2");
+
+            soundEffects = new List<SoundEffect>();
+            soundEffects.Add(content.Load<SoundEffect>("p1thruster"));
+            soundEffects.Add(content.Load<SoundEffect>("p1gun"));
+            soundEffects.Add(content.Load<SoundEffect>("p2thruster"));
+            soundEffects.Add(content.Load<SoundEffect>("p2gun"));
+
+            instances = new List<SoundEffectInstance>();
+            instances.Add(soundEffects[0].CreateInstance());
+            instances.Add(soundEffects[1].CreateInstance());
+            instances.Add(soundEffects[2].CreateInstance());
+            instances.Add(soundEffects[3].CreateInstance());
+
+
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
@@ -61,7 +97,10 @@ namespace Spacewar
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.S))
+            {
+                MediaPlayer.Play(bgmusic);
                 return State.Run;
+            }
             if (keyboardState.IsKeyDown(Keys.Q))
                 return State.Quit;
 
@@ -70,33 +109,48 @@ namespace Spacewar
 
         public static void MenuDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(menuSprite, menuPos, Color.White);
+            spriteBatch.Draw(menuSprite, backgroundPos, Color.White);
         }
 
         public static State RunUpdate(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                //return State.Pause;
-                game.Exit();
+                MediaPlayer.Pause();
+                return State.Pause;
             }
 
             interfaceManager.Timer(gameTime);
 
-            if (interfaceManager.end == true)
+            //Resets everything after game end
+            if (interfaceManager.endGame == true)
             {
-                interfaceManager.healthBars[0].health = 100;
-                playerManager.players[0].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[0].points = 0;
-
-                interfaceManager.healthBars[1].health = 100;
-                playerManager.players[1].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[1].points = 0;
-
-                interfaceManager.end = false;
                 interfaceManager.timeCounter = 180f;
 
+                foreach (var player in playerManager.players)
+                {
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
+                    player.killCount = 0;
+                    player.deathCount = 0;
+                }
+
+                interfaceManager.endGame = false;
+
                 return State.SubMenu;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                playerManager.players[0].Thrust(0.1f);
+
+                instances[0].IsLooped = true;
+                instances[0].Volume = 0.1f;
+                instances[0].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.S))
+            {
+                instances[0].Stop();
             }
 
            
@@ -104,7 +158,19 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
-            /*if (Keyboard.GetState().IsKeyDown(Keys.Tab)) var bullet = Weapons.Clone() as Weapons;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                instances[1].IsLooped = true;
+                instances[1].Volume = 0.1f;
+                instances[1].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.W))
+            {
+                instances[1].Stop();
+            }
+
+            /*var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
             bullet.Position = this.Positon;
             bullet.LinearVelocity = this.LinearVelocity * 2;
@@ -112,10 +178,33 @@ namespace Spacewar
             bullet.Parent = this;
             spirtes.Add(weapons); */
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                playerManager.players[1].Thrust(0.1f);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Down)) playerManager.players[1].Thrust(0.1f);
+                instances[2].IsLooped = true;
+                instances[2].Volume = 0.1f;
+                instances[2].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.Down))
+            {
+                instances[2].Stop();
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) playerManager.players[1].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) playerManager.players[1].Turn(-0.1f);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                instances[3].IsLooped = true;
+                instances[3].Volume = 0.1f;
+                instances[3].Play();
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.Up))
+            {
+                instances[3].Stop();
+            }
+
             /*if (Keyboard.GetState().IsKeyDown(Keys.Space)) var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
             bullet.Position = this.Positon;
@@ -128,6 +217,7 @@ namespace Spacewar
             {
                 player.Update();
 
+                if (player.HitCircular(blackhole.Radius, blackhole.Position))
                 foreach(var powerup in powerupManager.powerUps.ToArray())
                 {
                     if(player.HitCircular(powerup.Radius, powerup.Position))
@@ -158,10 +248,12 @@ namespace Spacewar
                 interfaceManager.healthBars[i].health = playerManager.players[i].Health;
                 interfaceManager.interfaceTexts[i].kills = playerManager.players[i].killCount;
                 interfaceManager.interfaceTexts[i].points = playerManager.players[i].killCount - playerManager.players[i].deathCount;
+                interfaceManager.interfaceTexts[i].deaths = playerManager.players[i].deathCount;
             }
 
+            //Create resizeable rectangles for healthbars
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
-            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141+(1-(interfaceManager.healthBars[1].health / healthBar.maxHealth))*healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
+            interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141 + (1 - (interfaceManager.healthBars[1].health / healthBar.maxHealth)) * healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
             
 
@@ -177,31 +269,114 @@ namespace Spacewar
         public static void RunDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
 
-            foreach (var player in playerManager.players)
+
+            //Gjord av Samuel
+            //Player thrust effect
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                player.Draw(spriteBatch);
-            }
-
-            interfaceManager.healthBars[0].Draw(spriteBatch);
-            interfaceManager.healthBars[1].Draw(spriteBatch);
-
-            if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length >= 3)
-            {
-                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 675, -4);
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, playerEffect1, null);
             }
             else
             {
-                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 695, -4);
+                spriteBatch.Begin();
             }
 
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, -4);
+            playerManager.players[0].Draw(spriteBatch);
 
-            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 705, 32);
-            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 870, 32);
+            spriteBatch.End();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, playerEffect2, null);
+            }
+            else
+            {
+                spriteBatch.Begin();
+            }
+
+            playerManager.players[1].Draw(spriteBatch);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+
+            foreach (var healthbar in interfaceManager.healthBars)
+            {
+                healthbar.Draw(spriteBatch);
+            }
+
+            if (Convert.ToString(interfaceManager.interfaceTexts[0].points).Length > 1)
+            {
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 700, 0);
+            }
+            else
+            {
+                interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 715, 0);
+            }
             interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
             powerupManager.Draw(spriteBatch);
+
+            if (Convert.ToString(interfaceManager.interfaceTexts[1].points).Length > 1)
+            {
+                interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 845, 0);
+            }
+            else
+            {
+                interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 855, 0);
+            }
+
+            //Draw kills and deaths
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 495, -2);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1005, -2);
+            interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 590, -2);
+            interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1100, -2);
+
+            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 760, 85);
+
+            powerupManager.Draw(spriteBatch);
+        }
+
+        public static State PauseUpdate()
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.C))
+            {
+                MediaPlayer.Resume();
+                return State.Run;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                foreach (var player in playerManager.players)
+                {
+                    player.deathCount = 0;
+                    player.killCount = 0;
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
+
+                }
+
+                MediaPlayer.Play(bgmusic);
+                return State.Run;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.M))
+            {
+                return State.Menu;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Q))
+                return State.Quit;
+
+            return State.Pause;
+        }
+
+        public static void PauseDraw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(pauseSprite, backgroundPos, Color.White);
+        }
 
         }
             
@@ -211,15 +386,14 @@ namespace Spacewar
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.R))
             {
-                interfaceManager.healthBars[0].health = 100;
-                playerManager.players[0].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[0].points = 0;
-                interfaceManager.interfaceTexts[0].kills = 0;
+                foreach (var player in playerManager.players)
+                {
+                    player.deathCount = 0;
+                    player.killCount = 0;
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
 
-                interfaceManager.healthBars[1].health = 100;
-                playerManager.players[1].Position = playerManager.RandomPos();
-                interfaceManager.interfaceTexts[1].points = 0;
-                interfaceManager.interfaceTexts[1].kills = 0;
+                }
 
                 return State.Run;
             }
@@ -239,8 +413,8 @@ namespace Spacewar
 
         public static void SubMenuDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(subMenuSprite, subMenuPos, Color.White);
-            interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font2, spriteBatch, 794, 220);
+            spriteBatch.Draw(subMenuSprite, backgroundPos, Color.White);
+            interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font3, spriteBatch, 794, 220);
         }
     }
 }

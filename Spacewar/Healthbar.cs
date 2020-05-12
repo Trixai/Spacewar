@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Spacewar
 {
+    //Alex
     class Healthbar
     {
         private Texture2D healthTexture;
@@ -21,11 +22,6 @@ namespace Spacewar
             this.healthTexture = healthTexture;
             this.healthRectangle = healthRectangle;
             this.health = health;
-        }
-
-        public void TakeDamage()
-        {
-            health -= 1;
         }
 
         public void Draw(SpriteBatch spriteBatch)
