@@ -56,14 +56,16 @@ namespace Spacewar
             subMenuSprite = content.Load<Texture2D>("subMenu");
             pauseSprite = content.Load<Texture2D>("pauseMenu");            
 
+            //Samuel
             bgmusic = content.Load<Song>("bgmusic");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.1f;
 
 
             var size = new Point(100, 100);
-
+            //Samuel
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
+            
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
@@ -71,8 +73,9 @@ namespace Spacewar
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
+            //Samuel
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
-
+            //Samuel
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
 
