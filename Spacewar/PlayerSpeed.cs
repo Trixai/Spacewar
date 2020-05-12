@@ -21,7 +21,7 @@ namespace Spacewar
 
         public override void DopowerUp(Player player)
         {
-            player.Thrust(1.5f);
+            player.Thrust(10f);
         }
     }
 }

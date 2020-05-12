@@ -216,12 +216,13 @@ namespace Spacewar
             {
                 player.Update();
 
-                if (player.HitCircular(blackhole.Radius, blackhole.Position))
+                //if (player.HitCircular(blackhole.Radius, blackhole.Position))
                 foreach(var powerup in powerupManager.powerUps.ToArray())
                 {
                     if(player.HitCircular(powerup.Radius, powerup.Position))
                     {
-                        powerupManager.remove(powerup);
+                        powerup.DopowerUp(player);
+                        powerupManager.remove(powerup);                        
                         
                     }
                 }
