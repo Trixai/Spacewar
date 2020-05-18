@@ -19,6 +19,11 @@ namespace Spacewar
             
         }
 
+        public virtual void DopowerUp(Player player)
+        {
+
+        }
+
         
     }
 }

@@ -34,6 +34,7 @@ namespace Spacewar
 
         static Effect playerEffect1;
         static Effect playerEffect2;
+        static Powerup powerup;
         //static Weapons Weapons;
 
         static Random rnd = new Random();
@@ -55,14 +56,16 @@ namespace Spacewar
             subMenuSprite = content.Load<Texture2D>("subMenu");
             pauseSprite = content.Load<Texture2D>("pauseMenu");            
 
+            //Samuel
             bgmusic = content.Load<Song>("bgmusic");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.1f;
 
 
             var size = new Point(100, 100);
-
+            //Samuel
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
+            
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
@@ -70,8 +73,9 @@ namespace Spacewar
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
+            //Samuel
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
-
+            //Samuel
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
 
@@ -156,6 +160,9 @@ namespace Spacewar
                 instances[0].Stop();
             }
 
+           
+
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
 
@@ -217,7 +224,18 @@ namespace Spacewar
             {
                 player.Update();
 
-                if (player.HitCircular(blackhole.Radius, blackhole.Position))
+                //if (player.HitCircular(blackhole.Radius, blackhole.Position))
+                foreach(var powerup in powerupManager.powerUps.ToArray())
+                {
+                    if(player.HitCircular(powerup.Radius, powerup.Position))
+                    {
+                        powerup.DopowerUp(player);
+                        powerupManager.remove(powerup);                        
+                        
+                    }
+                }
+
+                if(player.HitCircular(blackhole.Radius,blackhole.Position))
                 {
                     player.Damage(100);
                 }
@@ -229,6 +247,8 @@ namespace Spacewar
                     player.Health = 100;
                     player.Velocity = Vector2.Zero;
                 }
+
+                
             }
 
             for (int i = 0; i < playerManager.players.Length; i++)
@@ -243,6 +263,7 @@ namespace Spacewar
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141 + (1 - (interfaceManager.healthBars[1].health / healthBar.maxHealth)) * healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
 
+            
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
 
@@ -258,6 +279,8 @@ namespace Spacewar
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             spriteBatch.End();
 
+
+            //Gjord av Samuel
             //Player thrust effect
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
@@ -300,6 +323,8 @@ namespace Spacewar
             {
                 interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 715, 0);
             }
+            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
+            powerupManager.Draw(spriteBatch);
 
             if (Convert.ToString(interfaceManager.interfaceTexts[1].points).Length > 1)
             {
@@ -315,8 +340,6 @@ namespace Spacewar
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1005, -2);
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 590, -2);
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1100, -2);
-
-            interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 760, 85);
 
             powerupManager.Draw(spriteBatch);
         }
@@ -370,8 +393,7 @@ namespace Spacewar
         public static void PauseDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(pauseSprite, backgroundPos, Color.White);
-        }
-
+        } 
 
         public static State SubMenuUpdate()
         {

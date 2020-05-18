@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Spacewar
 {
+    //Gjord av Samuel
     public class Blackhole : GameObject
     {
         public Blackhole(Texture2D texture, Vector2 pos, Vector2 velocity, Point size, int Wheight, float force) : base(texture, pos, velocity, size, Wheight)

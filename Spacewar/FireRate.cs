@@ -18,5 +18,10 @@ namespace Spacewar
 
 
         }
+
+        public override void DopowerUp(Player player)
+        {
+          // player.
+        }
     }
 }
