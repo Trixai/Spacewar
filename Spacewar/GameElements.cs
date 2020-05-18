@@ -49,12 +49,14 @@ namespace Spacewar
 
         public static void LoadContent(ContentManager content)
         {
+            //Alex
             backgroundPos.X = 0;
             backgroundPos.Y = 0;
 
             menuSprite = content.Load<Texture2D>("menu");
             subMenuSprite = content.Load<Texture2D>("subMenu");
-            pauseSprite = content.Load<Texture2D>("pauseMenu");            
+            pauseSprite = content.Load<Texture2D>("pauseMenu");
+            //Alex slut
 
             //Samuel
             bgmusic = content.Load<Song>("bgmusic");
@@ -67,18 +69,23 @@ namespace Spacewar
             playerManager = new PlayerManager(content.Load<Texture2D>("player1"), content.Load<Texture2D>("player2"), size, size, width, height);
             
             powerupManager = new PowerupManager(height, content.Load<Texture2D>("ball_1"));
+
+            //Alex
             interfaceManager = new InterfaceManager(content.Load<Texture2D>("p1healthbar2"), content.Load<Texture2D>("p2healthbar2"), new Rectangle(53, 6, 100, 31), new Rectangle(1141, 6, 100, 31), 100, 100,
                 content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0, 0, 0, 0, 180f);
 
             interfaceText = new InterfaceText(content.Load<SpriteFont>("font1"), content.Load<SpriteFont>("font2"), content.Load<SpriteFont>("font3"), 0, 0, 0);
             background = content.Load<Texture2D>("background");
             healthBar = new Healthbar(content.Load<Texture2D>("p1healthbar"), new Rectangle(53, 6, 100, 31), 100);
+            //Alex slut
+
             //Samuel
             blackhole = new Blackhole(content.Load<Texture2D>("empty"), new Vector2(width / 2, height / 2), Vector2.Zero, new Point(10, 10), height, 1f);
             //Samuel
             playerEffect1 = content.Load<Effect>("playereffect1");
             playerEffect2 = content.Load<Effect>("playereffect2");
 
+            //Alex
             soundEffects = new List<SoundEffect>();
             soundEffects.Add(content.Load<SoundEffect>("p1thruster"));
             soundEffects.Add(content.Load<SoundEffect>("p1gun"));
@@ -90,11 +97,12 @@ namespace Spacewar
             instances.Add(soundEffects[1].CreateInstance());
             instances.Add(soundEffects[2].CreateInstance());
             instances.Add(soundEffects[3].CreateInstance());
-
+            //Alex slut
 
             //weapons = new Weapons(Content.Load<Texture2D>("projectile_1"));
         }
 
+        //Alex
         public static State MenuUpdate()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -108,14 +116,18 @@ namespace Spacewar
 
             return State.Menu;
         }
+        //Alex slut
 
+        //Alex
         public static void MenuDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(menuSprite, backgroundPos, Color.White);
         }
+        //Alex slut
 
         public static State RunUpdate(GameTime gameTime)
         {
+            //Alex
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 MediaPlayer.Pause();
@@ -160,8 +172,6 @@ namespace Spacewar
                 instances[0].Stop();
             }
 
-           
-
             if (Keyboard.GetState().IsKeyDown(Keys.S)) playerManager.players[0].Thrust(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.D)) playerManager.players[0].Turn(0.1f);
             if (Keyboard.GetState().IsKeyDown(Keys.A)) playerManager.players[0].Turn(-0.1f);
@@ -176,6 +186,7 @@ namespace Spacewar
             {
                 instances[1].Stop();
             }
+            //Alex slut
 
             /*var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
@@ -185,6 +196,7 @@ namespace Spacewar
             bullet.Parent = this;
             spirtes.Add(weapons); */
 
+            //Alex
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 playerManager.players[1].Thrust(0.1f);
@@ -211,6 +223,7 @@ namespace Spacewar
             {
                 instances[3].Stop();
             }
+            //Alex slut
 
             /*if (Keyboard.GetState().IsKeyDown(Keys.Space)) var bullet = Weapons.Clone() as Weapons;
             bullet.Direction = this.Direction;
@@ -251,6 +264,7 @@ namespace Spacewar
                 
             }
 
+            //Alex Samuel
             for (int i = 0; i < playerManager.players.Length; i++)
             {
                 interfaceManager.healthBars[i].health = playerManager.players[i].Health;
@@ -258,12 +272,13 @@ namespace Spacewar
                 interfaceManager.interfaceTexts[i].points = playerManager.players[i].killCount - playerManager.players[i].deathCount;
                 interfaceManager.interfaceTexts[i].deaths = playerManager.players[i].deathCount;
             }
+            //Samuel slut
 
             //Create resizeable rectangles for healthbars
             interfaceManager.healthBars[0].healthRectangle = new Rectangle(53, 6, Convert.ToInt32((interfaceManager.healthBars[0].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
             interfaceManager.healthBars[1].healthRectangle = new Rectangle(Convert.ToInt32(1141 + (1 - (interfaceManager.healthBars[1].health / healthBar.maxHealth)) * healthBar.fullWidth), 6, Convert.ToInt32((interfaceManager.healthBars[1].health / healthBar.maxHealth) * healthBar.fullWidth), 31);
+            //Alex slut
 
-            
 
             playerManager.Pull(blackhole.Position, blackhole.Force);
 
@@ -274,11 +289,12 @@ namespace Spacewar
             return State.Run;
         }
 
+        //Alex
         public static void RunDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             spriteBatch.End();
-
+            //Alex slut
 
             //Gjord av Samuel
             //Player thrust effect
@@ -308,6 +324,7 @@ namespace Spacewar
 
             spriteBatch.End();
 
+            //Alex
             spriteBatch.Begin();
 
             foreach (var healthbar in interfaceManager.healthBars)
@@ -324,7 +341,6 @@ namespace Spacewar
                 interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].points), interfaceManager.interfaceTexts[0].font2, spriteBatch, 715, 0);
             }
             interfaceText.Draw(interfaceManager.timeText, interfaceManager.interfaceTexts[0].font1, spriteBatch, 750, 100);
-            powerupManager.Draw(spriteBatch);
 
             if (Convert.ToString(interfaceManager.interfaceTexts[1].points).Length > 1)
             {
@@ -340,10 +356,12 @@ namespace Spacewar
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].kills), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1005, -2);
             interfaceManager.interfaceTexts[0].Draw(Convert.ToString(interfaceManager.interfaceTexts[0].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 590, -2);
             interfaceManager.interfaceTexts[1].Draw(Convert.ToString(interfaceManager.interfaceTexts[1].deaths), interfaceManager.interfaceTexts[0].font1, spriteBatch, 1100, -2);
+            //Alex slut
 
             powerupManager.Draw(spriteBatch);
         }
 
+        //Alex
         public static State PauseUpdate()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -389,12 +407,16 @@ namespace Spacewar
 
             return State.Pause;
         }
+        //Alex slut
 
+        //Alex
         public static void PauseDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(pauseSprite, backgroundPos, Color.White);
-        } 
+        }
+        //Alex slut
 
+        //Alex
         public static State SubMenuUpdate()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -424,11 +446,14 @@ namespace Spacewar
 
             return State.SubMenu;
         }
+        //Alex slut
 
+        //Alex
         public static void SubMenuDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(subMenuSprite, backgroundPos, Color.White);
             interfaceText.Draw(interfaceManager.winner, interfaceManager.interfaceTexts[0].font3, spriteBatch, 794, 220);
         }
+        //Alex slut
     }
 }
