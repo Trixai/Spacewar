@@ -27,9 +27,11 @@ namespace Spacewar
             graphics.PreferredBackBufferHeight = height;
             graphics.ApplyChanges();
 
+            //Alex
             GameElements.currentState = GameElements.State.Menu;
             GameElements.Initialize();
             base.Initialize();
+            //Alex slut
         }
 
         protected override void LoadContent()
@@ -42,6 +44,7 @@ namespace Spacewar
         {
         }
 
+        //Alex
         protected override void Update(GameTime gameTime)
         {
             switch (GameElements.currentState)
@@ -65,7 +68,9 @@ namespace Spacewar
 
             base.Update(gameTime);
         }
+        //Alex slut
 
+        //Alex
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -94,5 +99,6 @@ namespace Spacewar
 
             base.Draw(gameTime);
         }
+        //Alex slut
     }
 }
