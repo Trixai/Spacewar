@@ -133,6 +133,11 @@ namespace Spacewar
                     player.deathCount = 0;
                 }
 
+                instances[0].Stop();
+                instances[1].Stop();
+                instances[2].Stop();
+                instances[3].Stop();
+
                 interfaceManager.endGame = false;
 
                 return State.SubMenu;
@@ -157,7 +162,7 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 instances[1].IsLooped = true;
-                instances[1].Volume = 0.1f;
+                instances[1].Volume = 0.05f;
                 instances[1].Play();
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.W))
@@ -192,7 +197,7 @@ namespace Spacewar
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 instances[3].IsLooped = true;
-                instances[3].Volume = 0.1f;
+                instances[3].Volume = 0.05f;
                 instances[3].Play();
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.Up))
@@ -333,7 +338,7 @@ namespace Spacewar
                     player.killCount = 0;
                     player.Health = 100;
                     player.Position = playerManager.RandomPos();
-
+                    player.Velocity = Vector2.Zero;
                 }
 
                 MediaPlayer.Play(bgmusic);
@@ -342,6 +347,17 @@ namespace Spacewar
 
             if (keyboardState.IsKeyDown(Keys.M))
             {
+                interfaceManager.timeCounter = 180f;
+
+                foreach (var player in playerManager.players)
+                {
+                    player.Health = 100;
+                    player.Position = playerManager.RandomPos();
+                    player.killCount = 0;
+                    player.deathCount = 0;
+                    player.Velocity = Vector2.Zero;
+                }
+
                 return State.Menu;
             }
 
@@ -368,7 +384,7 @@ namespace Spacewar
                     player.killCount = 0;
                     player.Health = 100;
                     player.Position = playerManager.RandomPos();
-
+                    player.Velocity = Vector2.Zero;
                 }
 
                 return State.Run;
